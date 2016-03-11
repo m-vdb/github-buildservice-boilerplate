@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
 {% block body %}
-<p>Home</p>
+<h1>Your repository list</h1>
+<form method="post" action="{% url 'webhooks_create' %}">
+  {% csrf_token %}
+  <ul>
+    {% for repo in repositories %}
+    <li>{{ repo.full_name }} <input type="checkbox" name="repo_{{ repo.full_name }}"></li>
+    {% endfor %}
+  </ul>
+  <input type="submit" value="Register selected repositories" />
+</form>
 {% endblock %}
