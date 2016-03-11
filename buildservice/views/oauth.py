@@ -7,13 +7,12 @@ def login(request):
     github = OAuth2Session(settings.GITHUB_CLIENT_ID)
     authorization_url, state = github.authorization_url(settings.GITHUB_AUTHORIZATION_BASE_URL)
 
-    # TODO: cache state in session
+    request.session['oauth_state'] = state
     return redirect(authorization_url)
 
 
 def callback(request):
-    # TODO: pass state here
-    github = OAuth2Session(settings.GITHUB_CLIENT_ID)
+    github = OAuth2Session(settings.GITHUB_CLIENT_ID, request.session['oauth_state'])
     token = github.fetch_token(
         settings.GITHUB_TOKEN_URL,
         client_secret=settings.GITHUB_CLIENT_SECRET,

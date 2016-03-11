@@ -82,6 +82,21 @@ DATABASES = {
 }
 
 
+# Caches & session
+
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': os.environ.get('REDIS_URL'),
+        'TIMEOUT': 1,  # 60 * 60 * 24 * 90,  # 90 days
+        'OPTIONS': {
+            'DB': 0,
+            'SERIALIZER_CLASS': 'redis_cache.serializers.JSONSerializer',
+        }
+    },
+}
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
