@@ -146,6 +146,9 @@ GITHUB_CLIENT_SECRET = os.environ.get('GITHUB_CLIENT_SECRET')
 GITHUB_SCOPES = ["repo"]  # use "read:public_key" to checkout code if needed
 GITHUB_AUTHORIZATION_BASE_URL = "https://github.com/login/oauth/authorize"
 GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token"
+GITHUB_HOOK_NAME = "web"
+GITHUB_HOOK_EVENTS = ["pull_request"]
+GITHUB_HOOK_SECRET = os.environ.get('GITHUB_HOOK_SECRET')
 # for debug purposes only
 if DEBUG:
     GITHUB_USER_ID = os.environ.get('GITHUB_USER_ID')
