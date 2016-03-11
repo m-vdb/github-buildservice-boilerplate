@@ -28,8 +28,8 @@ Oauth. Be careful to define your _Authorization callback URL_ as follow: `<domai
 ### The server
 
 It should be a simple webserver:
-- one view (simple Django form) to create the webhook
-- [implement OAUTH](https://developer.github.com/v3/oauth/#web-application-flow) (using [this](https://requests-oauthlib.readthedocs.org/en/latest/examples/real_world_example.html#web-app-example-of-oauth-2-web-application-flow))
+- one view (simple Django form) to login, [implement OAUTH](https://developer.github.com/v3/oauth/#web-application-flow) (using [this](https://requests-oauthlib.readthedocs.org/en/latest/examples/real_world_example.html#web-app-example-of-oauth-2-web-application-flow))
+- on view to select applications and POST to create the webhook
 - one route that will receive the webhook
 - [one Redis-powered async task runner](https://github.com/nvie/rq)
   - before launching a task, POST a `"pending"` status on the Status API
