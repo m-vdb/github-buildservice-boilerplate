@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 
 from buildservice.models import OAuthToken
 from buildservice.utils import github
@@ -12,4 +12,5 @@ def home(request):
     except OAuthToken.DoesNotExist:
         return redirect('oauth_login')
 
-    return render_to_response("home.html", {"repositories": github.get_user_repos(token.value)})
+    # needed for CSRF
+    return render(request, "home.html", {"repositories": github.get_user_repos(token.value)})
