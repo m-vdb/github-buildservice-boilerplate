@@ -1,6 +1,7 @@
 from django.conf import settings
 from github3 import login
 
+from buildservice.errors import CannotCreateHook
 
 def get_user_repos(token):
     """
@@ -23,6 +24,8 @@ def create_webhook(token, repo, url):
         events=settings.GITHUB_HOOK_EVENTS,
         active=True
     )
+    if not hook:
+        raise CannotCreateHook("Cannot create hook for repo %s/%s" % (owner, repository))
     return hook.id
 
 
