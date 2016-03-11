@@ -1,7 +1,13 @@
 # github-buildservice-boilerplate
 A boilerplate for creating a build service using Github
 
-## Plan
+## Before installing
+
+Setup a new [Github application](https://github.com/settings/applications/new). It is required to perform
+Oauth. Be careful to define your _Authorization callback URL_ as follow: `<domain>/oauth`.
+
+
+## TODO
 
 ### Working with Github
 
@@ -23,7 +29,7 @@ A boilerplate for creating a build service using Github
 
 It should be a simple webserver:
 - one view (simple Django form) to create the webhook
-- [implement OAUTH](https://developer.github.com/v3/oauth/#web-application-flow) (anything exists to do it?)
+- [implement OAUTH](https://developer.github.com/v3/oauth/#web-application-flow) (using [this](https://requests-oauthlib.readthedocs.org/en/latest/examples/real_world_example.html#web-app-example-of-oauth-2-web-application-flow))
 - one route that will receive the webhook
 - [one Redis-powered async task runner](https://github.com/nvie/rq)
   - before launching a task, POST a `"pending"` status on the Status API
