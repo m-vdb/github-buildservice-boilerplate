@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
+from django.contrib.auth import views as auth_views
 
 from buildservice.views import interface, oauth, webhooks
 
@@ -21,6 +22,7 @@ from buildservice.views import interface, oauth, webhooks
 urlpatterns = [
     # UI
     url(r'^$', interface.home, name='interface_home'),
+    url(r'^login/$', auth_views.login, name='auth_login'),
     # OAuth
     url(r'^oauth/login$', oauth.login, name='oauth_login'),
     url(r'^oauth/callback$', oauth.callback, name='oauth_callback'),
