@@ -4,8 +4,10 @@ from django.shortcuts import redirect
 
 from buildservice.models import Webhook
 from buildservice.utils import github
+from buildservice.utils.decorators import oauth_token_required
 
 
+@oauth_token_required
 @login_required
 def create(request):
     repos = set()
@@ -16,7 +18,6 @@ def create(request):
     repos_with_hook = request.user.webhook_set.filter(active=True).values_list('repository', flat=True)
     new_repos = repos.difference(repos_with_hook)
     if new_repos:
-        # TODO: catch that (decorator)
         token = request.user.oauth_token
         hooks = []
         hook_url = request.build_absolute_uri(reverse('webhooks_pull_request'))
