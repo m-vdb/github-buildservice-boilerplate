@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect
 
@@ -25,7 +26,7 @@ def create(request):
             hook_id = github.create_webhook(token.value, repo, hook_url)
             hooks.append(Webhook(repository=repo, github_id=hook_id))
 
-        request.user.webhook_set.add(*hooks)
+        request.user.webhook_set.add(bulk=False, *hooks)
 
     return redirect('home')
 
