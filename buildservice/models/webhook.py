@@ -12,6 +12,7 @@ class Webhook(models.Model):
         on_delete=models.CASCADE
     )
     repository = models.CharField(max_length=255)
+    github_id = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
