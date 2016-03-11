@@ -1,2 +1,4 @@
 Django==1.9.4
 django-dotenv==1.4.1
+requests==2.9.1
+requests_oauthlib==0.6.1
