@@ -7,30 +7,16 @@ Setup a new [Github application](https://github.com/settings/applications/new). 
 Oauth. Be careful to define your _Authorization callback URL_ as follow: `<domain>/oauth`.
 
 
-## TODO
+## The app
 
-### Working with Github
+The home view, contains a list of the user's Github projects. The using [OAuth strategy](https://requests-oauthlib.readthedocs.org/en/latest/examples/real_world_example.html#web-app-example-of-oauth-2-web-application-flow) relies on 2 views:
+- `/oauth/login`: starting point of oauth, redirects to Github.
+- `/oauth/callback`: oauth callback route, will store the access token in database.
 
-- create a [webhook on github](https://developer.github.com/v3/repos/hooks/#create-a-hook):
-  - name: `"web"`
-  - config: `{"url": "...", "content_type": "json", "secret": "...", "insecure_ssl": "0"}`
-  - events: `[pull_request"]`
+Finally, the application relies on 2 other routes. The first is `/webhooks/create`, used after a submit on the homepage form to create a webhook. This route will have two effects: [create the webhook](https://developer.github.com/v3/repos/hooks/#create-a-hook) onto Github API and save a model representing it in database. The second route is `/webhook/pull_request`, [hit](https://developer.github.com/v3/repos/hooks/#receiving-webhooks) whenever a Pull Request is submitted on the user's repository. It'll [POST on Status API](https://developer.github.com/v3/repos/statuses/#create-a-status), first a `pending` status, then a `failure` or `error` status.
 
-- configure our server properly to [receive webhooks](https://developer.github.com/v3/repos/hooks/#receiving-webhooks)
-  - `X-GitHub-Event` header contains the event type
-  - `X-Hub-Signature` header to verify signature (cf. secret above)
-  - upon receiving a `pull_request` event, we want to check for 2 actions: `opened` and `synchronize` (see [payload example](https://developer.github.com/v3/activity/events/types/#webhook-payload-example-13))
 
-- [POST on Status API](https://developer.github.com/v3/repos/statuses/#create-a-status):
-  - should post when starting to do something
-  - should post when finished to do something
+## Under the hood
 
-### The server
 
-It should be a simple webserver:
-- one view (simple Django form) to login, [implement OAUTH](https://developer.github.com/v3/oauth/#web-application-flow) (using [this](https://requests-oauthlib.readthedocs.org/en/latest/examples/real_world_example.html#web-app-example-of-oauth-2-web-application-flow))
-- on view to select applications and POST to create the webhook
-- one route that will receive the webhook
-- [one Redis-powered async task runner](https://github.com/nvie/rq)
-  - before launching a task, POST a `"pending"` status on the Status API
-  - at the end of the task, POST either a `"success"`, `"failure"` or `"error"` status
+TODO
