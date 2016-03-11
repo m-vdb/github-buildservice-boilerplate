@@ -12,4 +12,4 @@ def home(request):
     except OAuthToken.DoesNotExist:
         return redirect('oauth_login')
 
-    return render_to_response("home.html", {"repositories": github.get_user_repos(token)})
+    return render_to_response("home.html", {"repositories": github.get_user_repos(token.value)})
