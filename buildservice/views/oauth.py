@@ -12,11 +12,11 @@ def login(request):
 
 
 def callback(request):
-    github = OAuth2Session(settings.GITHUB_CLIENT_ID, request.session['oauth_state'])
+    github = OAuth2Session(settings.GITHUB_CLIENT_ID, state=request.session['oauth_state'])
     token = github.fetch_token(
         settings.GITHUB_TOKEN_URL,
         client_secret=settings.GITHUB_CLIENT_SECRET,
-        authorization_response=request.build_absolute_uri()  # TODO: code, redirect_uri?
+        authorization_response=request.build_absolute_uri()
     )
 
     return redirect("interface_home")
