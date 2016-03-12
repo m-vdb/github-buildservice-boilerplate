@@ -30,6 +30,18 @@ def create_webhook(token, repo, url):
     return hook.id
 
 
+def delete_webhook(token, repo, hook_id):
+    """
+    Delete a webhook from a repo.
+    """
+    gh = _github_login(token)
+    owner, repository = repo.split('/')
+    repo = gh.repository(owner, repository)
+    hook = repo.hook(hook_id)
+    if hook:
+        hook.delete()
+
+
 def _github_login(token):
     """
     Connect to github, using token in prod and
