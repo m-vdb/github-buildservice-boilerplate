@@ -6,7 +6,11 @@
   {% csrf_token %}
   <ul>
     {% for repo in repositories %}
-    <li>{{ repo.full_name }} <input type="checkbox" name="repo_{{ repo.full_name }}"></li>
+    <li>
+      {{ repo.full_name }}
+      <input type="checkbox" name="repo_{{ repo.full_name }}"
+             {% if repo.full_name in active_hooks %}checked="checked"{% endif %}>
+    </li>
     {% endfor %}
   </ul>
   <input type="submit" value="Register selected repositories" />

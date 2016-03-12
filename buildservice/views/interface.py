@@ -8,6 +8,10 @@ from buildservice.utils.decorators import oauth_token_required
 @login_required
 @oauth_token_required
 def home(request):
-    token = request.user.oauth_token
+    token = request.user.oauth_token.value
+    hooks = request.user.webhook_set.filter(active=True)
     # needed for CSRF
-    return render(request, "home.html", {"repositories": github.get_user_repos(token.value)})
+    return render(request, "home.html", {
+        "repositories": github.get_user_repos(token),
+        "active_hooks": set(hook.repository for hook in hooks)
+    })
