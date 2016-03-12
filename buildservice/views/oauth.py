@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from requests_oauthlib import OAuth2Session
 
 from buildservice.models import OAuthToken
+from buildservice.errors import MalformattedToken
 
 
 def login(request):
@@ -21,5 +22,9 @@ def callback(request):
         authorization_response=request.build_absolute_uri()
     )
 
-    OAuthToken.objects.create(user=request.user, value=token)
+    try:
+        OAuthToken.objects.create(user=request.user, value=token['access_token'])
+    except KeyError:
+        raise MalformattedToken('Cannot read access_token.')
+
     return redirect("interface_home")
