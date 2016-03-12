@@ -4,7 +4,7 @@ from requests_oauthlib import OAuth2Session
 
 
 def login(request):
-    github = OAuth2Session(settings.GITHUB_CLIENT_ID)
+    github = OAuth2Session(settings.GITHUB_CLIENT_ID, scope=settings.GITHUB_SCOPES)
     authorization_url, state = github.authorization_url(settings.GITHUB_AUTHORIZATION_BASE_URL)
 
     request.session['oauth_state'] = state
