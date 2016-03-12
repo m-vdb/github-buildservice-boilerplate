@@ -19,16 +19,16 @@ def create(request):
     repos_with_hook = request.user.webhook_set.filter(active=True).values_list('repository', flat=True)
     new_repos = repos.difference(repos_with_hook)
     if new_repos:
-        token = request.user.oauth_token
+        token = request.user.oauth_token.value
         hooks = []
         hook_url = request.build_absolute_uri(reverse('webhooks_pull_request'))
         for repo in new_repos:
-            hook_id = github.create_webhook(token.value, repo, hook_url)
+            hook_id = github.create_webhook(token, repo, hook_url)
             hooks.append(Webhook(repository=repo, github_id=hook_id))
 
         request.user.webhook_set.add(bulk=False, *hooks)
 
-    return redirect('home')
+    return redirect('interface_home')
 
 
 def pull_request(request):
