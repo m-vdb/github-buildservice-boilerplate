@@ -8,8 +8,8 @@ from buildservice.utils import github
 from buildservice.utils.decorators import oauth_token_required
 
 
-@oauth_token_required
 @login_required
+@oauth_token_required
 def create(request):
     repos = set()
     for name, value in request.POST.iteritems():
