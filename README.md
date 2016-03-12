@@ -4,7 +4,7 @@ A boilerplate for creating a build service using Github
 ## Before installing
 
 Setup a new [Github application](https://github.com/settings/applications/new). It is required to perform
-Oauth. Be careful to define your _Authorization callback URL_ as follow: `<domain>/oauth/callback`.
+Oauth. Be careful to define your _Authorization callback URL_ as follow: `https://<domain>/oauth/callback`. You'l need HTTPS.
 
 
 ## The app
