@@ -16,17 +16,28 @@ def create(request):
         if name.startswith('repo_') and value == 'on':
             repos.add(name[5:])
 
-    repos_with_hook = request.user.webhook_set.filter(active=True).values_list('repository', flat=True)
-    new_repos = repos.difference(repos_with_hook)
+    token = request.user.oauth_token.value
+    # compute the diff of repos
+    repos_with_hook = set(request.user.webhook_set.filter(active=True).values_list('repository', flat=True))
+    new_repos = repos - repos_with_hook
+    deactivated_repos = repos_with_hook - repos
+
+    # create new hooks
     if new_repos:
-        token = request.user.oauth_token.value
-        hooks = []
         hook_url = request.build_absolute_uri(reverse('webhooks_pull_request'))
         for repo in new_repos:
             hook_id = github.create_webhook(token, repo, hook_url)
-            hooks.append(Webhook(repository=repo, github_id=hook_id))
+            Webhook.objects.update_or_create(
+                user=request.user, repository=repo,
+                defaults={"github_id": hook_id, "active": True}
+            )
 
-        request.user.webhook_set.add(bulk=False, *hooks)
+    # deactivate some hooks
+    if deactivated_repos:
+        hooks = Webhook.objects.filter(repository__in=deactivated_repos)
+        for hook in hooks:
+            github.delete_webhook(token, hook.repository, hook.github_id)
+        hooks.update(active=False, github_id=0)
 
     return redirect('interface_home')
 
