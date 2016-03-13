@@ -12,3 +12,6 @@ deps:
 
 migrate:
 	${MANAGEPY} migrate
+
+settings:
+	cp env.tpl .env
