@@ -11,3 +11,10 @@ dependencies:
 test:
   override:
     - pylint buildservice --rcfile=pylint.rc
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - git remote add dokku-demo dokku@$DOKKU_SERVER_IP:buildservice
+      - git push dokku-demo master
