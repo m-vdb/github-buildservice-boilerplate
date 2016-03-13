@@ -164,3 +164,4 @@ BUILD_SERVICE_STATUS_DESCS = {
     'error': 'Oh dear',
 }
 BUILD_SERVICE_STATUS_CONTEXT = "continuous-integration/buildservice"
+BUILDSERVICE_BASE_URL = os.environ.get('BUILDSERVICE_BASE_URL')
