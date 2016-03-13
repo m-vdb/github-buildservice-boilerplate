@@ -163,3 +163,4 @@ BUILD_SERVICE_STATUS_DESCS = {
     'failure': 'Failed :(',
     'error': 'Oh dear',
 }
+BUILD_SERVICE_STATUS_CONTEXT = "continuous-integration/buildservice"
