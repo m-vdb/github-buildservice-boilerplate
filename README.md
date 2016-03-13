@@ -1,4 +1,7 @@
 # github-buildservice-boilerplate
+
+[![Circle CI](https://circleci.com/gh/m-vdb/github-buildservice-boilerplate.svg?style=shield&circle-token=005fe273ea45c0f445bddbf53f2f90594dcfce91)](https://circleci.com/gh/m-vdb/github-buildservice-boilerplate)
+
 A boilerplate for creating a build service using Github
 
 ## Before installing
