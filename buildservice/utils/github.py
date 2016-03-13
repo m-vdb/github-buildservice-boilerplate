@@ -1,3 +1,4 @@
+"""Github utils method"""
 from django.conf import settings
 from github3 import login
 
@@ -8,20 +9,24 @@ def get_user_repos(token):
     """
     Get all user repositories using a OAuth Token.
     """
-    gh = _github_login(token)
-    return gh.iter_repos()
+    client = _github_login(token)
+    return client.iter_repos()
 
 
 def create_webhook(token, repo, url):
     """
     Create a webhook for the repo.
     """
-    gh = _github_login(token)
+    client = _github_login(token)
     owner, repository = repo.split('/')
-    repo = gh.repository(owner, repository)
+    repo = client.repository(owner, repository)
     hook = repo.create_hook(
         settings.GITHUB_HOOK_NAME,
-        {"url": url, "content_type": "json", "secret": settings.GITHUB_HOOK_SECRET, "insecure_ssl": "0"},
+        {
+            "url": url, "content_type": "json",
+            "secret": settings.GITHUB_HOOK_SECRET,
+            "insecure_ssl": "0"
+        },
         events=settings.GITHUB_HOOK_EVENTS,
         active=True
     )
@@ -34,9 +39,9 @@ def delete_webhook(token, repo, hook_id):
     """
     Delete a webhook from a repo.
     """
-    gh = _github_login(token)
+    client = _github_login(token)
     owner, repository = repo.split('/')
-    repo = gh.repository(owner, repository)
+    repo = client.repository(owner, repository)
     hook = repo.hook(hook_id)
     if hook:
         hook.delete()
@@ -46,9 +51,9 @@ def create_status(token, repo, sha, state, **kwargs):
     """
     Create a Status on the repo, for the given sha.
     """
-    gh = _github_login(token)
+    client = _github_login(token)
     owner, repository = repo.split('/')
-    repo = gh.repository(owner, repository)
+    repo = client.repository(owner, repository)
     repo.create_status(
         sha, state,
         context=settings.BUILD_SERVICE_STATUS_CONTEXT,

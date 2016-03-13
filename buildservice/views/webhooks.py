@@ -1,3 +1,4 @@
+"""Webhook views"""
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -14,14 +15,19 @@ from buildservice.utils.decorators import oauth_token_required, signature_requir
 @login_required
 @oauth_token_required
 def create(request):
+    """
+    This view creates Webhook(s). Additionally,
+    it handles webhook deactivation.
+    """
     repos = set()
     for name, value in request.POST.iteritems():
         if name.startswith('repo_') and value == 'on':
             repos.add(name[5:])
 
-    token = request.user.oauth_token.value
+    user = request.user
+    token = user.oauth_token.value
     # compute the diff of repos
-    repos_with_hook = set(request.user.webhook_set.filter(active=True).values_list('repository', flat=True))
+    repos_with_hook = set(user.webhook_set.filter(active=True).values_list('repository', flat=True))
     new_repos = repos - repos_with_hook
     deactivated_repos = repos_with_hook - repos
 
@@ -31,7 +37,7 @@ def create(request):
         for repo in new_repos:
             hook_id = github.create_webhook(token, repo, hook_url)
             Webhook.objects.update_or_create(
-                user=request.user, repository=repo,
+                user=user, repository=repo,
                 defaults={"github_id": hook_id, "active": True}
             )
 
@@ -49,6 +55,10 @@ def create(request):
 @csrf_exempt
 @require_POST
 def push(request):
+    """
+    The Push webhook. It's directly hit by
+    Github when commits are pushed.
+    """
     try:
         event = request.META['HTTP_X_GITHUB_EVENT']
         payload = json.loads(request.body)

@@ -1,3 +1,4 @@
+"""The Webhook model"""
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -20,4 +21,7 @@ class Webhook(models.Model):
 
     @classmethod
     def get_push_url(cls):
+        """
+        Return the push url, useful when creating the webhook on Github.
+        """
         return "%s%s" % (settings.BUILDSERVICE_BASE_URL, reverse('webhooks_push'))

@@ -19,7 +19,7 @@ from django.contrib.auth import views as auth_views
 from buildservice.views import interface, oauth, webhooks
 
 
-urlpatterns = [
+urlpatterns = [  # pylint: disable=invalid-name
     # UI
     url(r'^$', interface.home, name='interface_home'),
     url(r'^login/$', auth_views.login, name='auth_login'),

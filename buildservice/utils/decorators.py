@@ -1,3 +1,4 @@
+"""Decorators for views"""
 from functools import wraps
 import hashlib
 import hmac
@@ -16,6 +17,10 @@ def oauth_token_required(func):
     """
     @wraps(func)
     def inner(request, *args, **kwargs):
+        """
+        Try to get token and redirect to oauth_login
+        if not found.
+        """
         try:
             _ = request.user.oauth_token
         except (AttributeError, OAuthToken.DoesNotExist):
@@ -34,6 +39,9 @@ def signature_required(func):
     """
     @wraps(func)
     def inner(request, *args, **kwargs):
+        """
+        Try to validate the signature and return a 401 if not valid.
+        """
         signature = "sha1=%s" % hmac.new(
             settings.GITHUB_HOOK_SECRET.encode('utf-8'),
             request.body,

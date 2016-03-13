@@ -1,3 +1,4 @@
+"""The Build model"""
 from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -15,8 +16,14 @@ class Build(models.Model):
 
     @property
     def pusher_profile_url(self):
+        """
+        Return the pusher profile URL on Github.
+        """
         return settings.GITHUB_USER_PROFILE_URL % self.pusher_name
 
     @property
     def url(self):
+        """
+        Return the build url, useful to create statuses.
+        """
         return "%s%s" % (settings.BUILDSERVICE_BASE_URL, reverse('interface_build', args=[self.pk]))

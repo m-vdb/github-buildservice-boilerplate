@@ -15,4 +15,4 @@ import dotenv
 dotenv.read_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "buildservice.settings")
 
-application = get_wsgi_application()
+application = get_wsgi_application()  # pylint: disable=invalid-name
