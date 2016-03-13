@@ -15,3 +15,8 @@ def home(request):
         "repositories": github.get_user_repos(token),
         "active_hooks": set(hook.repository for hook in hooks)
     })
+
+
+@login_required
+def build(request, build_id):
+    return render(request, "build.html")

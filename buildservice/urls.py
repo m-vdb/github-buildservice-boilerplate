@@ -23,6 +23,7 @@ urlpatterns = [
     # UI
     url(r'^$', interface.home, name='interface_home'),
     url(r'^login/$', auth_views.login, name='auth_login'),
+    url(r'^build/(?P<build_id>\d+)$', interface.build, name='interface_build'),
     # OAuth
     url(r'^oauth/login$', oauth.login, name='oauth_login'),
     url(r'^oauth/callback$', oauth.callback, name='oauth_callback'),
