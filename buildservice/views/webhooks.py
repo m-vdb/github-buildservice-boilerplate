@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect
 
@@ -24,7 +23,7 @@ def create(request):
 
     # create new hooks
     if new_repos:
-        hook_url = request.build_absolute_uri(reverse('webhooks_pull_request'))
+        hook_url = Webhook.get_push_url()
         for repo in new_repos:
             hook_id = github.create_webhook(token, repo, hook_url)
             Webhook.objects.update_or_create(

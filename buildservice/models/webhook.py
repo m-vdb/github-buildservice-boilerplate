@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.db import models
 
 
@@ -16,3 +17,7 @@ class Webhook(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @classmethod
+    def get_push_url(cls):
+        return "%s%s" % (settings.BUILDSERVICE_BASE_URL, reverse('webhooks_push'))
