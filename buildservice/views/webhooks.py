@@ -1,11 +1,14 @@
+import json
+
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
-from buildservice.models import Webhook
+from buildservice.models import Webhook, Build, OAuthToken
 from buildservice.utils import github
-from buildservice.utils.decorators import oauth_token_required
+from buildservice.utils.decorators import oauth_token_required, signature_required
 
 
 @login_required
@@ -24,7 +27,7 @@ def create(request):
 
     # create new hooks
     if new_repos:
-        hook_url = request.build_absolute_uri(reverse('webhooks_pull_request'))
+        hook_url = Webhook.get_push_url()
         for repo in new_repos:
             hook_id = github.create_webhook(token, repo, hook_url)
             Webhook.objects.update_or_create(
@@ -42,9 +45,36 @@ def create(request):
     return redirect('interface_home')
 
 
-def pull_request(request):
-    # TODO
-    # - 'X-GitHub-Event' header contains the event type
-    # - 'X-Hub-Signature' header to verify signature (cf. secret above)
-    # - upon receiving a 'pull_request' event, we want to check for 2 actions: 'opened' and 'synchronize'
+@signature_required
+@csrf_exempt
+@require_POST
+def push(request):
+    try:
+        event = request.META['HTTP_X_GITHUB_EVENT']
+        payload = json.loads(request.body)
+    except (KeyError, ValueError, TypeError):
+        return HttpResponse()  # we don't care about errors
+
+    if event == 'push':
+        sha = payload['after']
+        repository = payload['repository']['full_name']
+        pusher = payload['pusher']['name']
+
+        # try to find a token. If none, do nothing
+        token = OAuthToken.objects.filter(user__webhook__repository=repository).first()
+        if not token:
+            return HttpResponse()
+        token = token.value
+
+        build = Build(
+            repository=repository, sha=sha,
+            pusher_name=pusher
+        )
+        build.save()
+        github.create_status(
+            token, repository, sha,
+            state='pending', target_url=build.url
+        )
+        # TODO: launch task
+
     return HttpResponse()

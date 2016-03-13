@@ -23,10 +23,11 @@ urlpatterns = [
     # UI
     url(r'^$', interface.home, name='interface_home'),
     url(r'^login/$', auth_views.login, name='auth_login'),
+    url(r'^build/(?P<build_id>\d+)$', interface.build, name='interface_build'),
     # OAuth
     url(r'^oauth/login$', oauth.login, name='oauth_login'),
     url(r'^oauth/callback$', oauth.callback, name='oauth_callback'),
     # Webhooks
-    url(r'^webhooks/create$', webhooks.create, name='webhooks_create'),
-    url(r'^webhooks/pull-request$', webhooks.pull_request, name='webhooks_pull_request'),
+    url(r'^webhooks$', webhooks.create, name='webhooks_create'),
+    url(r'^webhooks/push$', webhooks.push, name='webhooks_push'),
 ]

@@ -146,9 +146,16 @@ GITHUB_SCOPES = ["repo"]  # use "read:public_key" to checkout code if needed
 GITHUB_AUTHORIZATION_BASE_URL = "https://github.com/login/oauth/authorize"
 GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token"
 GITHUB_HOOK_NAME = "web"
-GITHUB_HOOK_EVENTS = ["pull_request"]
+GITHUB_HOOK_EVENTS = ["push"]
 GITHUB_HOOK_SECRET = os.environ.get('GITHUB_HOOK_SECRET')
+GITHUB_USER_PROFILE_URL = "https://github.com/%s"
 # for debug purposes only
 if DEBUG:
     GITHUB_USER_ID = os.environ.get('GITHUB_USER_ID')
     GITHUB_USER_PASSWORD = os.environ.get('GITHUB_USER_PASSWORD')
+
+
+# Buildservice
+
+BUILD_SERVICE_STATUS_CONTEXT = "continuous-integration/buildservice"
+BUILDSERVICE_BASE_URL = os.environ.get('BUILDSERVICE_BASE_URL')
