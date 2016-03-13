@@ -9,18 +9,15 @@ class Build(models.Model):
     """
     repository = models.CharField(max_length=255)
     sha = models.CharField(max_length=40)
-    pull_request_id = models.IntegerField(default=0)
-    pull_request_number = models.IntegerField(default=0)
+    pusher_name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
-    def pull_request_url(self):
-        return settings.GITHUB_PULL_REQUEST_BASE_URL % {
-            'repository': self.repository,
-            'number': pull_request_number
-        }
+    def pusher_profile_url(self):
+        return settings.GITHUB_USER_PROFILE_URL % self.pusher_name
 
     @property
     def url(self):
         return reverse('interface_build', (self.pk, ))
+
