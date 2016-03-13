@@ -153,3 +153,13 @@ GITHUB_PULL_REQUEST_BASE_URL = "https://github.com/%(repository)s/pull/%(number)
 if DEBUG:
     GITHUB_USER_ID = os.environ.get('GITHUB_USER_ID')
     GITHUB_USER_PASSWORD = os.environ.get('GITHUB_USER_PASSWORD')
+
+
+# Buildservice
+
+BUILD_SERVICE_STATUS_DESCS = {
+    'pending': 'Pending...',
+    'success': 'Success!',
+    'failure': 'Failed :(',
+    'error': 'Oh dear',
+}
