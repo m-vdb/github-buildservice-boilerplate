@@ -20,4 +20,3 @@ class Build(models.Model):
     @property
     def url(self):
         return reverse('interface_build', (self.pk, ))
-
