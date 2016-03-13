@@ -7,3 +7,7 @@ dependencies:
     - make settings
   post:
     - pip install pylint
+
+test:
+  override:
+    - pylint buildservice --rcfile=pylint.rc
