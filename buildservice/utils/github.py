@@ -52,7 +52,7 @@ def create_status(token, repo, sha, state, **kwargs):
     repo.create_status(
         sha, state,
         description=settings.BUILD_SERVICE_STATUS_DESCS[state],
-        context=settings.BUILD_SERVICE_STATUS_CONTEXT
+        context=settings.BUILD_SERVICE_STATUS_CONTEXT,
         **kwargs
     )
 
