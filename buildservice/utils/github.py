@@ -51,7 +51,6 @@ def create_status(token, repo, sha, state, **kwargs):
     repo = gh.repository(owner, repository)
     repo.create_status(
         sha, state,
-        description=settings.BUILD_SERVICE_STATUS_DESCS[state],
         context=settings.BUILD_SERVICE_STATUS_CONTEXT,
         **kwargs
     )
