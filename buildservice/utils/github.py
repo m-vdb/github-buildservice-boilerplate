@@ -42,6 +42,20 @@ def delete_webhook(token, repo, hook_id):
         hook.delete()
 
 
+def create_status(token, repo, sha, state, **kwargs):
+    """
+    Create a Status on the repo, for the given sha.
+    """
+    gh = _github_login(token)
+    owner, repository = repo.split('/')
+    repo = gh.repository(owner, repository)
+    repo.create_status(
+        sha, state,
+        description=settings.BUILD_SERVICE_STATUS_DESCS[state],
+        **kwargs
+    )
+
+
 def _github_login(token):
     """
     Connect to github, using token in prod and
