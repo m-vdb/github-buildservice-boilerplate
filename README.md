@@ -21,5 +21,4 @@ The application exposes on 2 other routes. The first is `/webhooks`, used after 
 
 ## Under the hood
 
-
 TODO
