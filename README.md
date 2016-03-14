@@ -9,7 +9,6 @@ A boilerplate for creating a build service using Github
 Setup a new [Github application](https://github.com/settings/applications/new). It is required to perform
 Oauth. Be careful to define your _Authorization callback URL_ as follow: `https://<domain>/oauth/callback`. You'l need HTTPS.
 
-
 ## The app
 
 The home view, contains a list of the user's Github projects; it relies on OAuth to get the user information. The [OAuth strategy](https://requests-oauthlib.readthedocs.org/en/latest/examples/real_world_example.html#web-app-example-of-oauth-2-web-application-flow) relies on 2 views:
