@@ -6,3 +6,7 @@ class CannotCreateHook(Exception):
 
 class MalformattedToken(Exception):
     """Raised when a received token is malformatted"""
+
+
+class MissingToken(Exception):
+    """Raised when we cannot find a token."""
