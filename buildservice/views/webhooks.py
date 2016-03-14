@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from buildservice import tasks
 from buildservice.models import Webhook, Build, OAuthToken
 from buildservice.utils import github
 from buildservice.utils.decorators import oauth_token_required, signature_required
@@ -85,6 +86,7 @@ def push(request):
             token, repository, sha,
             state='pending', target_url=build.url
         )
-        # TODO: launch task
+        # launch build asynchronously
+        tasks.execute_build(build.pk)
 
     return HttpResponse()
