@@ -142,7 +142,7 @@ STATIC_URL = '/static/'
 
 RQ_QUEUES = {
     'default': {
-        'USE_REDIS_CACHE': 'default',
+        'URL': os.environ.get('REDIS_URL'),
     }
 }
 
