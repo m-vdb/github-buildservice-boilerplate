@@ -20,7 +20,7 @@ def home(request):
     # needed for CSRF
     return render(request, "home.html", {
         "repositories": github.get_user_repos(token),
-        "active_hooks": set(hook.repository for hook in hooks)
+        "active_hooks": set(hook.repository.name for hook in hooks)
     })
 
 
