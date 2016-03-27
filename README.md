@@ -16,8 +16,3 @@ The home view, contains a list of the user's Github projects; it relies on OAuth
 - `/oauth/callback`: oauth callback route, will store the access token in database.
 
 The application exposes on 2 other routes. The first is `/webhooks`, used after a submit on the homepage form to create a webhook. This route will have two effects: [create the webhook](https://developer.github.com/v3/repos/hooks/#create-a-hook) onto Github API and save a model representing it in database. The second route is `/webhook/push`, [hit](https://developer.github.com/v3/repos/hooks/#receiving-webhooks) whenever a Push is made on the user's repository. It'll [POST on Status API](https://developer.github.com/v3/repos/statuses/#create-a-status), first a `pending` status, then a `success`, `failure` or `error` status.
-
-
-## Under the hood
-
-TODO
