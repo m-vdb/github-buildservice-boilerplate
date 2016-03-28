@@ -53,7 +53,9 @@ def badge(request, repo_name, branch_name=None):
         if last_build:
             status = last_build.status
 
-    return render(
+    response = render(
         request, svg_name % status,
         content_type="image/svg+xml"
     )
+    response['Cache-Control'] = 'no cache'
+    return response
