@@ -18,7 +18,10 @@ def execute_build(build_id):
 
     # TODO: do stuff
 
+    status = 'success'
+    build.status = status
+    build.save()
     github.create_status(
         token.value, build.repository, build.sha,
-        state='success', target_url=build.url
+        state=status, target_url=build.url
     )
