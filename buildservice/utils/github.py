@@ -56,7 +56,7 @@ def create_status(token, repo, sha, state, **kwargs):
     repo = client.repository(owner, repository)
     repo.create_status(
         sha, state,
-        context=settings.BUILD_SERVICE_STATUS_CONTEXT,
+        context=settings.BUILDSERVICE_STATUS_CONTEXT,
         **kwargs
     )
 

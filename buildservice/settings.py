@@ -68,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'buildservice.utils.context_processors.base',
             ],
         },
     },
@@ -165,5 +166,6 @@ if DEBUG:
 
 # Buildservice
 
-BUILD_SERVICE_STATUS_CONTEXT = "continuous-integration/buildservice"
+BUILDSERVICE_STATUS_CONTEXT = "continuous-integration/buildservice"
 BUILDSERVICE_BASE_URL = os.environ.get('BUILDSERVICE_BASE_URL')
+BUILDSERVICE_APP_NAME = 'Buildservice'

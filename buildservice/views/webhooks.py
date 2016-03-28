@@ -38,7 +38,12 @@ def create(request):
     if new_repos:
         hook_url = Webhook.get_push_url()
         for repo in new_repos:
-            repo, _ = Repository.objects.get_or_create(name=repo)
+            repo, _ = Repository.objects.get_or_create(
+                name=repo,
+                defaults={
+                    'default_branch': request.POST['default_branch_%s' % repo]
+                }
+            )
             hook_id = github.create_webhook(token, repo.name, hook_url)
             Webhook.objects.update_or_create(
                 user=user, repository=repo,
