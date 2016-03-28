@@ -37,11 +37,11 @@ def create(request):
     # create new hooks
     if new_repos:
         hook_url = Webhook.get_push_url()
-        for repo_name in new_repos:
-            repository, _ = Repository.objects.get_or_create(name=repo_name)
-            hook_id = github.create_webhook(token, repository.name, hook_url)
+        for repo in new_repos:
+            repo, _ = Repository.objects.get_or_create(name=repo)
+            hook_id = github.create_webhook(token, repo.name, hook_url)
             Webhook.objects.update_or_create(
-                user=user, repository=repository,
+                user=user, repository=repo,
                 defaults={"github_id": hook_id, "active": True}
             )
 
