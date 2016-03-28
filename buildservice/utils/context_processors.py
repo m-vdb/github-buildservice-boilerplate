@@ -6,7 +6,7 @@ for more information.
 from django.conf import settings
 
 
-def base(request):
+def base(request):  # pylint: disable=unused-argument
     """
     A base context processor that return
     app-wide settings.

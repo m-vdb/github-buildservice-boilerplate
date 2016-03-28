@@ -44,14 +44,14 @@ def badge(request, repo_name, branch_name=None):
     except Repository.DoesNotExist:
         pass
     else:
-        build = Build.objects.filter(
+        last_build = Build.objects.filter(
             repository=repository,
             branch=branch_name or repository.default_branch
         ).exclude(
             status='pending'
         ).order_by('-created_at').first()
-        if build:
-            status = build.status
+        if last_build:
+            status = last_build.status
 
     return render(
         request, svg_name % status,
