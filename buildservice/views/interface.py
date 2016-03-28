@@ -1,6 +1,7 @@
 """The views accessible to humans"""
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.views.decorators.cache import cache_control
 
 from buildservice.models import Repository, Build
 from buildservice.utils import github
@@ -33,6 +34,7 @@ def build(request, build_id):
     return render(request, "build.html", {'build_id': build_id})
 
 
+@cache_control(no_cache=True)
 def badge(request, repo_name, branch_name=None):
     """
     Return a svg that gives the build status of the repository.
@@ -57,5 +59,4 @@ def badge(request, repo_name, branch_name=None):
         request, svg_name % status,
         content_type="image/svg+xml"
     )
-    response['Cache-Control'] = 'no cache'
     return response
