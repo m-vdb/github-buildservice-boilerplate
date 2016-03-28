@@ -68,7 +68,7 @@ def push(request):
         return HttpResponse()  # we don't care about errors
 
     if event == 'push':
-        branch = payload['ref']
+        branch = payload['ref'].replace('refs/heads/', '')
         sha = payload['after']
         repo_name = payload['repository']['full_name']
         pusher = payload['pusher']['name']
