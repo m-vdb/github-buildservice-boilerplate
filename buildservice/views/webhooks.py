@@ -3,12 +3,12 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from buildservice import tasks
-from buildservice.models import Webhook, Build, OAuthToken
+from buildservice.models import Webhook, Build, OAuthToken, Repository
 from buildservice.utils import github
 from buildservice.utils.decorators import oauth_token_required, signature_required
 
@@ -28,25 +28,26 @@ def create(request):
     user = request.user
     token = user.oauth_token.value
     # compute the diff of repos
-    repos_with_hook = set(user.webhook_set.filter(active=True).values_list('repository', flat=True))
+    repos_with_hook = set(user.webhook_set.filter(active=True).values_list('repository__name', flat=True))
     new_repos = repos - repos_with_hook
     deactivated_repos = repos_with_hook - repos
 
     # create new hooks
     if new_repos:
         hook_url = Webhook.get_push_url()
-        for repo in new_repos:
-            hook_id = github.create_webhook(token, repo, hook_url)
+        for repo_name in new_repos:
+            repository, _ = Repository.objects.get_or_create(name=repo_name)
+            hook_id = github.create_webhook(token, repository.name, hook_url)
             Webhook.objects.update_or_create(
-                user=user, repository=repo,
+                user=user, repository=repository,
                 defaults={"github_id": hook_id, "active": True}
             )
 
     # deactivate some hooks
     if deactivated_repos:
-        hooks = Webhook.objects.filter(repository__in=deactivated_repos)
+        hooks = Webhook.objects.filter(repository__name__in=deactivated_repos)
         for hook in hooks:
-            github.delete_webhook(token, hook.repository, hook.github_id)
+            github.delete_webhook(token, hook.repository.name, hook.github_id)
         hooks.update(active=False, github_id=0)
 
     return redirect('interface_home')
@@ -68,10 +69,11 @@ def push(request):
 
     if event == 'push':
         sha = payload['after']
-        repository = payload['repository']['full_name']
+        repo_name = payload['repository']['full_name']
         pusher = payload['pusher']['name']
 
         # try to find a token. If none, do nothing
+        repository = get_object_or_404(Repository, name=repo_name)
         token = OAuthToken.objects.filter(user__webhook__repository=repository).first()
         if not token:
             return HttpResponse()
@@ -83,7 +85,7 @@ def push(request):
         )
         build.save()
         github.create_status(
-            token, repository, sha,
+            token, repository.name, sha,
             state='pending', target_url=build.url
         )
         # launch build asynchronously
