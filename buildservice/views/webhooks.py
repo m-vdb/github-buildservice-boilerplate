@@ -28,7 +28,9 @@ def create(request):
     user = request.user
     token = user.oauth_token.value
     # compute the diff of repos
-    repos_with_hook = set(user.webhook_set.filter(active=True).values_list('repository__name', flat=True))
+    repos_with_hook = set(
+        user.webhook_set.filter(active=True).values_list('repository__name', flat=True)
+    )
     new_repos = repos - repos_with_hook
     deactivated_repos = repos_with_hook - repos
 

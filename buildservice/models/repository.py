@@ -1,7 +1,5 @@
 """The Repository model"""
 from django.db import models
-from django.conf import settings
-from django.core.urlresolvers import reverse
 
 
 class Repository(models.Model):
