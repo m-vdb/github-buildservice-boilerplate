@@ -13,7 +13,7 @@ class Webhook(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
-    repository = models.CharField(max_length=255)
+    repository = models.ForeignKey('Repository')
     github_id = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
