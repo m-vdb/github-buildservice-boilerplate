@@ -68,6 +68,7 @@ def push(request):
         return HttpResponse()  # we don't care about errors
 
     if event == 'push':
+        branch = payload['ref']
         sha = payload['after']
         repo_name = payload['repository']['full_name']
         pusher = payload['pusher']['name']
@@ -81,7 +82,7 @@ def push(request):
 
         build = Build(
             repository=repository, sha=sha,
-            pusher_name=pusher
+            pusher_name=pusher, branch=branch
         )
         build.save()
         github.create_status(

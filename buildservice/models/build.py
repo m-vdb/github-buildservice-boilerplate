@@ -9,6 +9,7 @@ class Build(models.Model):
     A database record containing a repository build.
     """
     repository = models.ForeignKey('Repository', on_delete=models.CASCADE)
+    branch = models.CharField(max_length=255)
     sha = models.CharField(max_length=40)
     pusher_name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
