@@ -2,6 +2,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from buildservice.models import Repository, Build
 from buildservice.utils import github
 from buildservice.utils.decorators import oauth_token_required
 
@@ -30,3 +31,29 @@ def build(request, build_id):
     Displays a build progress.
     """
     return render(request, "build.html", {'build_id': build_id})
+
+
+def badge(request, repo_name, branch_name=None):
+    """
+    Return a svg that gives the build status of the repository.
+    """
+    svg_name = "svg/buildservice-%s.svg"
+    status = "unknown"
+    try:
+        repository = Repository.objects.get(name=repo_name)
+    except Repository.DoesNotExist:
+        pass
+    else:
+        # TODO Repository.default_branch or branch_name
+        build = Build.objects.filter(
+            repository=repository
+        ).exclude(
+            status='pending'
+        ).order_by('-created_at').first()
+        if build:
+            status = build.status
+
+    return render(
+        request, svg_name % status,
+        content_type="image/svg+xml"
+    )
