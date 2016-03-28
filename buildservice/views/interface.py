@@ -44,9 +44,9 @@ def badge(request, repo_name, branch_name=None):
     except Repository.DoesNotExist:
         pass
     else:
-        # TODO Repository.default_branch or branch_name
         build = Build.objects.filter(
-            repository=repository
+            repository=repository,
+            branch=branch_name or repository.default_branch
         ).exclude(
             status='pending'
         ).order_by('-created_at').first()
