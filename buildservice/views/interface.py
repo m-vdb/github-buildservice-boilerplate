@@ -55,8 +55,7 @@ def badge(request, repo_name, branch_name=None):
         if last_build:
             status = last_build.status
 
-    response = render(
+    return render(
         request, svg_name % status,
         content_type="image/svg+xml"
     )
-    return response
