@@ -22,6 +22,7 @@ from buildservice.views import interface, oauth, webhooks
 urlpatterns = [  # pylint: disable=invalid-name
     # UI
     url(r'^$', interface.home, name='interface_home'),
+    url(r'^repositories/register$', interface.register_repositories, name='register_repositories'),
     url(r'^login/$', auth_views.login, name='auth_login'),
     url(r'^build/(?P<build_id>\d+)$', interface.build, name='interface_build'),
     url(

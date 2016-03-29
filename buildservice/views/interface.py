@@ -13,7 +13,17 @@ from buildservice.utils.views import group_repositories
 @oauth_token_required
 def home(request):
     """
-    This is the home. WHen user is logged in and
+    This is the home. This list repositories
+    that already use the service.
+    """
+    pass
+
+
+@login_required
+@oauth_token_required
+def register_repositories(request):
+    """
+    When user is logged in and
     we have a token, this view lists the available
     repositories and makes it possible to activate
     or deactivate webhooks.
@@ -22,7 +32,7 @@ def home(request):
     hooks = request.user.webhook_set.filter(active=True)
     repos = github.get_user_repos(token)
     # needed for CSRF
-    return render(request, "home.html", {
+    return render(request, "register_repositories.html", {
         "repositories": group_repositories(repos),
         "active_hooks": set(hook.repository.name for hook in hooks)
     })
