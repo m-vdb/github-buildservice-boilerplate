@@ -6,6 +6,7 @@ from django.views.decorators.cache import cache_control
 from buildservice.models import Repository, Build
 from buildservice.utils import github
 from buildservice.utils.decorators import oauth_token_required
+from buildservice.utils.views import group_repositories
 
 
 @login_required
@@ -19,9 +20,10 @@ def home(request):
     """
     token = request.user.oauth_token.value
     hooks = request.user.webhook_set.filter(active=True)
+    repos = github.get_user_repos(token)
     # needed for CSRF
     return render(request, "home.html", {
-        "repositories": github.get_user_repos(token),
+        "repositories": group_repositories(repos),
         "active_hooks": set(hook.repository.name for hook in hooks)
     })
 
