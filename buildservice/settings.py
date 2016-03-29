@@ -29,7 +29,7 @@ DEBUG = bool(int(os.environ.get('DEBUG', '1')))
 
 ALLOWED_HOSTS = [] if DEBUG else [os.environ.get('ALLOWED_HOST')]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-USE_ETAGS = True
+USE_ETAGS = True  # useful for svg caching policies
 
 # Application definition
 
