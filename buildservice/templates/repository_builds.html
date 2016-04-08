@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>{{ repository.name}} <small>latest builds</small></h1>
+<ul>
+  {% for build in builds %}
+  <li>
+    <i class="icon-{{ build.status }}"></i>
+    <a href="{% url "interface_build" build.pk %}">{{ build.sha }}</a>
+    on {{ build.branch}}, by {{ build.pusher_name }}, <i>{{ build.created_at|timesince }} ago</i>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

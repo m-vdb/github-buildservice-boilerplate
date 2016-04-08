@@ -21,6 +21,21 @@ def home(request):
 
 @login_required
 @oauth_token_required
+def repository_builds(request, repository_name):
+    """
+    Display the builds within a repository.
+    """
+    repository = get_object_or_404(Repository, name=repository_name)
+    builds = Build.objects.filter(repository=repository).order_by('-created_at')
+
+    return render(request, "repository_builds.html", {
+        "repository": repository,
+        "builds": builds
+    })
+
+
+@login_required
+@oauth_token_required
 def register_repositories(request):
     """
     When user is logged in and
