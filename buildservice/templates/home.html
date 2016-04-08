@@ -1,13 +1,9 @@
 {% extends "base.html" %}
 
 {% block body %}
-<h1>Your repositories</h1>
-<ul>
-  {% for repo in repositories %}
-  <li>
-    <a>{{ repo.name }}</a>
-  </li>
-  {% endfor %}
-</ul>
-<p>Click <a href="{% url "register_repositories" %}">here</a> to register a repository.</p>
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2" style="margin-top: 20%;">
+    <p>Click <a href="{% url "register_repositories" %}">here</a> to register a new repository.</p>
+  </div>
+</div>
 {% endblock %}
