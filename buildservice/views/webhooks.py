@@ -2,6 +2,7 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.db.models import F
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -80,15 +81,20 @@ def push(request):
         repo_name = payload['repository']['full_name']
         pusher = payload['pusher']['name']
 
-        # try to find a token. If none, do nothing
         repository = get_object_or_404(Repository, name=repo_name)
+
+        # atomically update the build count on the repo
+        Repository.objects.filter(name=repo_name).update(build_count=F('build_count') + 1)
+        repository.refresh_from_db()
+
+        # try to find a token. If none, do nothing
         token = OAuthToken.objects.filter(user__webhook__repository=repository).first()
         if not token:
             return HttpResponse()
         token = token.value
 
         build = Build(
-            repository=repository, sha=sha,
+            repository=repository, sha=sha, number=repository.build_count,
             pusher_name=pusher, branch=branch
         )
         build.save()
