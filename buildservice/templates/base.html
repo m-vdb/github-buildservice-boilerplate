@@ -14,8 +14,14 @@
   <nav class="navbar navbar-light bg-faded">
     <h1 class="navbar-brand">{{ app_name }}</h1>
   </nav>
-  <div class="container-fluid">
-  {% block body %}{% endblock %}
+  <div class="row">
+    <div class="col-sm-3">
+      {% include "partials/nav.html" %}
+    </div>
+
+    <div class="col-sm-9">
+    {% block body %}{% endblock %}
+    </div>
   </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
