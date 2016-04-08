@@ -1,0 +1,7 @@
+<ul class="nav nav-pills nav-stacked">
+  {% for repo in user_repositories %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url "repository_builds" repo.pk %}">{{ repo.name }}</a>
+  </li>
+  {% endfor %}
+</ul>
