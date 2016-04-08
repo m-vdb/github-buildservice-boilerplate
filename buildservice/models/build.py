@@ -65,5 +65,4 @@ class Build(models.Model):
         """
         Return the 7 first chars of the Build's sha.
         """
-        return self.sha[:7]
-    
+        return self.sha[:7]  # pylint: disable=unsubscriptable-object
