@@ -23,6 +23,11 @@ class Build(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = (
+            ('repository', 'number'),
+        )
+
     @property
     def pusher_profile_url(self):
         """
