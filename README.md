@@ -1,7 +1,7 @@
 # github-buildservice-boilerplate
 
 [![Circle CI](https://circleci.com/gh/m-vdb/github-buildservice-boilerplate.svg?style=shield&circle-token=005fe273ea45c0f445bddbf53f2f90594dcfce91)](https://circleci.com/gh/m-vdb/github-buildservice-boilerplate)
-[![Buildservice](https://buildservice.maxvdb.com/badge/m-vdb/github-buildservice-boilerplate.svg)](https://buildservice.maxvdb.com)
+[![Buildservice](https://buildservice.maxvdb.com/badge/m-vdb/github-buildservice-boilerplate.svg)](https://buildservice.maxvdb.com/repositories/m-vdb/github-buildservice-boilerplate)
 
 A boilerplate for creating a build service using Github
 
