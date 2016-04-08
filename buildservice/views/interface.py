@@ -60,7 +60,7 @@ def build(request, repository_name, build_number):
     Displays a build progress.
     """
     build = get_object_or_404(Build, repository__name=repository_name, number=build_number)
-    return render(request, "build.html", {'build': build})
+    return render(request, "build.html", {'repository': build.repository, 'build': build})
 
 
 @cache_control(no_cache=True)
