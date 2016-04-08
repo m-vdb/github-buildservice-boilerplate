@@ -55,7 +55,7 @@ def register_repositories(request):
 
 @login_required
 @oauth_token_required
-def build(request, repository_name, build_number):
+def build_detail(request, repository_name, build_number):
     """
     Displays a build progress.
     """

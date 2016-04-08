@@ -29,7 +29,7 @@ urlpatterns = [  # pylint: disable=invalid-name
     ),
     url(
         r'^repositories/(?P<repository_name>[^/]+/[^/]+)/builds/(?P<build_number>\d+)$',
-        interface.build,
+        interface.build_detail,
         name='interface_build'
     ),
     url(r'^repositories/register$', interface.register_repositories, name='register_repositories'),

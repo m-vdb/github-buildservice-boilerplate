@@ -23,7 +23,8 @@ class Build(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(object):  # pylint: disable=too-few-public-methods
+        """Model options"""
         unique_together = (
             ('repository', 'number'),
         )
