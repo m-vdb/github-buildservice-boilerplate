@@ -8,6 +8,30 @@
   <title>{{ app_name }}</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+    body {
+      /* Margin bottom by footer height */
+      margin-bottom: 60px;
+    }
+    .footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      /* Set the fixed height of the footer here */
+      height: 60px;
+      background-color: #f5f5f5;
+    }
+    .footer p {
+      margin: 20px 0;
+    }
+    #main > div {
+      margin-bottom: 90px;
+    }
+  </style>
 {% endblock %}
 </head>
 
@@ -15,7 +39,7 @@
   <nav class="navbar navbar-light bg-faded">
     <a class="navbar-brand" href="/">{{ app_name }}</a>
   </nav>
-  <div class="container-full">
+  <div class="container-full" id="main">
     <div class="col-sm-3">
       {% include "partials/nav.html" %}
     </div>
@@ -24,6 +48,7 @@
     {% block body %}{% endblock %}
     </div>
   </div>
+  {% include "partials/footer.html" %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
 </body>
