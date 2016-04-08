@@ -15,6 +15,7 @@ class Build(models.Model):
         ('pending', 'Pending'),
     )
     repository = models.ForeignKey('Repository', on_delete=models.CASCADE)
+    number = models.IntegerField(default=1)
     branch = models.CharField(max_length=255)
     sha = models.CharField(max_length=40)
     pusher_name = models.CharField(max_length=255)

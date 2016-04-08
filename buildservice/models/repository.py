@@ -8,4 +8,5 @@ class Repository(models.Model):
     """
     name = models.CharField(max_length=255, unique=True)
     default_branch = models.CharField(max_length=255, default='master')
+    build_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
