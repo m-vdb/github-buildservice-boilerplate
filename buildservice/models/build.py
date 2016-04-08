@@ -40,7 +40,10 @@ class Build(models.Model):
         """
         Return the build url, useful to create statuses.
         """
-        return "%s%s" % (settings.BUILDSERVICE_BASE_URL, reverse('interface_build', args=[self.pk]))
+        return "%s%s" % (
+            settings.BUILDSERVICE_BASE_URL,
+            reverse('interface_build', args=[self.repository.name, self.number])
+        )
 
     @property
     def is_success(self):
