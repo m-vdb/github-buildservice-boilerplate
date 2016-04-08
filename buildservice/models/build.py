@@ -59,3 +59,11 @@ class Build(models.Model):
         Return True if the build is pending.
         """
         return self.status == 'pending'
+
+    @property
+    def short_sha(self):
+        """
+        Return the 7 first chars of the Build's sha.
+        """
+        return self.sha[:7]
+    
