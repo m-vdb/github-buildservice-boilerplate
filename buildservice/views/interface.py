@@ -54,11 +54,13 @@ def register_repositories(request):
 
 
 @login_required
-def build(request, build_id):
+@oauth_token_required
+def build(request, repository_name, build_number):
     """
     Displays a build progress.
     """
-    return render(request, "build.html", {'build_id': build_id})
+    build = get_object_or_404(Build, repository__name=repository_name, number=build_number)
+    return render(request, "build.html", {'build': build})
 
 
 @cache_control(no_cache=True)
