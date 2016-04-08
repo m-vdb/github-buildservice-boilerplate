@@ -35,3 +35,17 @@ class Build(models.Model):
         Return the build url, useful to create statuses.
         """
         return "%s%s" % (settings.BUILDSERVICE_BASE_URL, reverse('interface_build', args=[self.pk]))
+
+    @property
+    def is_success(self):
+        """
+        Return True if the build is successful.
+        """
+        return self.status == 'success'
+
+    @property
+    def is_pending(self):
+        """
+        Return True if the build is pending.
+        """
+        return self.status == 'pending'
