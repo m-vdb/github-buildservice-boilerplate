@@ -1,8 +1,6 @@
 """The views accessible to humans"""
-from operator import attrgetter
-
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.decorators.cache import cache_control
 
 from buildservice.models import Repository, Build
@@ -18,11 +16,8 @@ def home(request):
     This is the home. This list repositories
     that already use the service.
     """
-    hooks = request.user.webhook_set.filter(active=True)
+    return render(request, "home.html")
 
-    return render(request, "home.html", {
-        "repositories": sorted((hook.repository for hook in hooks), key=attrgetter('name'))
-    })
 
 @login_required
 @oauth_token_required
