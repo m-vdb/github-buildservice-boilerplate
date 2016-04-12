@@ -43,3 +43,5 @@ TODO
 - [Shields.io](http://shields.io/)
 - [Django](https://docs.djangoproject.com/en/1.9/)
 - [Dokku](http://dokku.viewdocs.io/dokku/)
+- [Bootstrap](http://getbootstrap.com/)
+- [Google Material Icons](https://design.google.com/icons/)
