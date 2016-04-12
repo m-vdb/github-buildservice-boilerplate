@@ -38,6 +38,13 @@
 <body>
   <nav class="navbar navbar-light bg-faded">
     <a class="navbar-brand" href="/">{{ app_name }}</a>
+    {% if user.is_authenticated %}
+    <ul class="nav navbar-nav pull-xs-right">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'auth_logout' %}">Log out</a>
+      </li>
+    </ul>
+    {% endif %}
   </nav>
   <div class="container-full" id="main">
     <div class="col-sm-3">
