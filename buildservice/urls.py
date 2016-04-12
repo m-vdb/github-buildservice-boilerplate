@@ -34,6 +34,7 @@ urlpatterns = [  # pylint: disable=invalid-name
     ),
     url(r'^repositories/register$', interface.register_repositories, name='register_repositories'),
     url(r'^login/$', auth_views.login, name='auth_login'),
+    url(r'^logout/$', auth_views.logout_then_login, name='auth_logout'),
     url(
         r'^badge/(?P<repo_name>[^\:]+/[^\:]+)(?:\:(?P<branch_name>.+))?\.svg$',
         interface.badge,
