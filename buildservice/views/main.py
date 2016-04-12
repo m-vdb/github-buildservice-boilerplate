@@ -1,4 +1,4 @@
-"""The views accessible to humans"""
+"""The main views accessible to humans"""
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.cache import cache_control
@@ -21,17 +21,27 @@ def home(request):
 
 @login_required
 @oauth_token_required
-def repository_builds(request, repository_name):
+def repository_detail(request, repository_name):
     """
     Display the builds within a repository.
     """
     repository = get_object_or_404(Repository, name=repository_name)
     builds = Build.objects.filter(repository=repository).order_by('-created_at')[:50]
 
-    return render(request, "repository_builds.html", {
+    return render(request, "repository_detail.html", {
         "repository": repository,
         "builds": builds
     })
+
+
+@login_required
+@oauth_token_required
+def build_detail(request, repository_name, build_number):
+    """
+    Displays a build progress.
+    """
+    build = get_object_or_404(Build, repository__name=repository_name, number=build_number)
+    return render(request, "build.html", {'repository': build.repository, 'build': build})
 
 
 @login_required
@@ -51,16 +61,6 @@ def register_repositories(request):
         "repositories": group_repositories(repos),
         "active_hooks": set(hook.repository.name for hook in hooks)
     })
-
-
-@login_required
-@oauth_token_required
-def build_detail(request, repository_name, build_number):
-    """
-    Displays a build progress.
-    """
-    build = get_object_or_404(Build, repository__name=repository_name, number=build_number)
-    return render(request, "build.html", {'repository': build.repository, 'build': build})
 
 
 @cache_control(no_cache=True)

@@ -2,7 +2,7 @@
   {% for repo in user_repositories %}
   <li class="nav-item">
     <a class="nav-link {% if repository and repository.name == repo.name %}active{% endif %}"
-       href="{% url "repository_builds" repo.name %}">{{ repo.name }}</a>
+       href="{% url "repository_detail" repo.name %}">{{ repo.name }}</a>
   </li>
   {% endfor %}
 </ul>

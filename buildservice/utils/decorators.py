@@ -67,7 +67,7 @@ def anonymous_user_required(func):
         else call `func` normally.
         """
         if request.user.is_authenticated():
-            return redirect('interface_home')
+            return redirect('home')
         return func(request, *args, **kwargs)
 
     return inner

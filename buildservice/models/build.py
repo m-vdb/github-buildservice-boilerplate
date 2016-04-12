@@ -43,7 +43,7 @@ class Build(models.Model):
         """
         return "%s%s" % (
             settings.BUILDSERVICE_BASE_URL,
-            reverse('interface_build', args=[self.repository.name, self.number])
+            reverse('build_detail', args=[self.repository.name, self.number])
         )
 
     @property

@@ -34,4 +34,4 @@ def callback(request):
     except KeyError:
         raise MalformattedToken('Cannot read access_token.')
 
-    return redirect("interface_home")
+    return redirect("home")

@@ -59,7 +59,7 @@ def create(request):
             github.delete_webhook(token, hook.repository.name, hook.github_id)
         hooks.update(active=False, github_id=0)
 
-    return redirect('interface_home')
+    return redirect('home')
 
 
 @signature_required
