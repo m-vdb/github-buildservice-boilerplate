@@ -41,6 +41,11 @@
     {% if user.is_authenticated %}
     <ul class="nav navbar-nav pull-xs-right">
       <li class="nav-item">
+        <a class="nav-link" href="{% url 'register_repositories' %}">
+          <i class="material-icons">more_horiz</i>
+        </a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="{% url 'auth_logout' %}">
           <i class="material-icons">exit_to_app</i>
         </a>
