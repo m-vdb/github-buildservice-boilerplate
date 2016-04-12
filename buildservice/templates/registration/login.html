@@ -31,6 +31,7 @@
 <div class="form-group row">
   <div class="col-sm-offset-2 col-sm-4">
     <input type="submit" value="Login" class="btn btn-primary" />
+    <a class="btn btn-default" href="{% url 'auth_register' %}">Register instead</a>
     <input type="hidden" name="next" value="/" />
     {% if form.errors %}
     <p class="text-danger">Your username and password didn't match. Please try again.</p>

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block extratitle %} - Login{% endblock %}
+
+{% block body %}
+<form class="form" method="post" action="{% url 'auth_register' %}" style="margin-top: 10%;">
+{% csrf_token %}
+<div class="form-group row">
+  <label for="{{ form.username.id_for_label }}" class="col-sm-2">Login</label>
+  <div class="col-sm-4">
+    <input class="form-control"
+           id="{{ form.username.id_for_label }}"
+           maxlength="254"
+           name="{{ form.username.html_name }}"
+           value="{{ form.username.value|default:'' }}"
+           type="text" />
+  </div>
+</div>
+<div class="form-group row">
+  <label for="{{ form.password1.id_for_label }}" class="col-sm-2">Password</label>
+  <div class="col-sm-4">
+    <input class="form-control"
+           id="{{ form.password1.id_for_label }}"
+           maxlength="254"
+           name="{{ form.password1.html_name }}"
+           value="{{ form.password1.value|default:'' }}"
+           type="password" />
+  </div>
+</div>
+<div class="form-group row">
+  <label for="{{ form.password2.id_for_label }}" class="col-sm-2">Confirm password</label>
+  <div class="col-sm-4">
+    <input class="form-control"
+           id="{{ form.password2.id_for_label }}"
+           maxlength="254"
+           name="{{ form.password2.html_name }}"
+           value="{{ form.password2.value|default:'' }}"
+           type="password" />
+  </div>
+</div>
+
+<div class="form-group row">
+  <div class="col-sm-offset-2 col-sm-4">
+    <input type="submit" value="Register" class="btn btn-primary" />
+    {% if form.errors %}
+    <p class="text-danger">
+      {{ form.username.errors|join:' ' }}
+      {{ form.non_field_errors|join:' ' }}
+      {{ form.password1.errors|join:' ' }}
+      {{ form.password2.errors|join:' ' }}
+    </p>
+    {% endif %}
+  </div>
+</div>
+</form>
+{% endblock %}
