@@ -17,7 +17,7 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import UserCreationForm
 
-from buildservice.views import interface, oauth, webhooks
+from buildservice.views import auth, interface, oauth, webhooks
 
 
 urlpatterns = [  # pylint: disable=invalid-name
@@ -34,22 +34,25 @@ urlpatterns = [  # pylint: disable=invalid-name
         name='interface_build'
     ),
     url(r'^repositories/register$', interface.register_repositories, name='register_repositories'),
-    # user management
-    url(r'^register/$', interface.RegisterView.as_view(
+    url(
+        r'^badge/(?P<repo_name>[^\:]+/[^\:]+)(?:\:(?P<branch_name>.+))?\.svg$',
+        interface.badge,
+        name='interface_badge'
+    ),
+
+    # auth
+    url(r'^register/$', auth.RegisterView.as_view(
         template_name='registration/register.html',
         form_class=UserCreationForm,
         success_url='/'
     ), name='auth_register'),
     url(r'^login/$', auth_views.login, name='auth_login'),
     url(r'^logout/$', auth_views.logout_then_login, name='auth_logout'),
-    url(
-        r'^badge/(?P<repo_name>[^\:]+/[^\:]+)(?:\:(?P<branch_name>.+))?\.svg$',
-        interface.badge,
-        name='interface_badge'
-    ),
+
     # OAuth
     url(r'^oauth/login$', oauth.login, name='oauth_login'),
     url(r'^oauth/callback$', oauth.callback, name='oauth_callback'),
+
     # Webhooks
     url(r'^webhooks$', webhooks.create, name='webhooks_create'),
     url(r'^webhooks/push$', webhooks.push, name='webhooks_push'),

@@ -1,40 +1,12 @@
 """The views accessible to humans"""
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
-from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control
-from django.views.generic.edit import CreateView
 
 from buildservice.models import Repository, Build
 from buildservice.utils import github
-from buildservice.utils.decorators import (
-    oauth_token_required, anonymous_user_required
-)
+from buildservice.utils.decorators import oauth_token_required
 from buildservice.utils.views import group_repositories
-
-
-@method_decorator(anonymous_user_required, name='dispatch')  # pylint: disable=too-many-ancestors
-class RegisterView(CreateView):
-    """
-    A view for registering a new user for the app.
-    It'll register to the home view upon success.
-    """
-
-    def form_valid(self, form):
-        """
-        This method is called after the form is validated,
-        meaning the user is created. Django doesn't authenticate
-        him automatically, we have to do it.
-        """
-        response = super(RegisterView, self).form_valid(form)
-        user = authenticate(
-            username=self.object.username,
-            password=form.cleaned_data['password1']
-        )
-        if user:  # means user is authenticated
-            login(self.request, user)
-        return response
 
 
 @login_required
