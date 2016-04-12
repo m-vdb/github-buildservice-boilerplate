@@ -26,7 +26,7 @@ def repository_builds(request, repository_name):
     Display the builds within a repository.
     """
     repository = get_object_or_404(Repository, name=repository_name)
-    builds = Build.objects.filter(repository=repository).order_by('-created_at')
+    builds = Build.objects.filter(repository=repository).order_by('-created_at')[:50]
 
     return render(request, "repository_builds.html", {
         "repository": repository,
