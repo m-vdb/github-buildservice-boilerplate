@@ -14,7 +14,7 @@ from buildservice.utils.decorators import (
 from buildservice.utils.views import group_repositories
 
 
-@method_decorator(anonymous_user_required, name='dispatch')
+@method_decorator(anonymous_user_required, name='dispatch')  # pylint: disable=too-many-ancestors
 class RegisterView(CreateView):
     """
     A view for registering a new user for the app.
