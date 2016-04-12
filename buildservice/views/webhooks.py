@@ -16,6 +16,7 @@ from buildservice.utils.decorators import oauth_token_required, signature_requir
 
 @login_required
 @oauth_token_required
+@require_POST
 def create(request):
     """
     This view creates Webhook(s). Additionally,
