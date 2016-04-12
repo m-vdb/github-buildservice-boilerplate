@@ -2,15 +2,19 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
+from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control
 from django.views.generic.edit import CreateView
 
 from buildservice.models import Repository, Build
 from buildservice.utils import github
-from buildservice.utils.decorators import oauth_token_required
+from buildservice.utils.decorators import (
+    oauth_token_required, anonymous_user_required
+)
 from buildservice.utils.views import group_repositories
 
 
+@method_decorator(anonymous_user_required, name='dispatch')
 class RegisterView(CreateView):
     """
     A view for registering a new user for the app.

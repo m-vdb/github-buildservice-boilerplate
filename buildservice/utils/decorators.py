@@ -53,3 +53,21 @@ def signature_required(func):
         return func(request, *args, **kwargs)
 
     return inner
+
+
+def anonymous_user_required(func):
+    """
+    A decorator that require that a user is *not* logged in.
+    If it's the case, it redirects the user to home.
+    """
+    @wraps(func)
+    def inner(request, *args, **kwargs):
+        """
+        Redirect the user to home if user is authentiated,
+        else call `func` normally.
+        """
+        if request.user.is_authenticated():
+            return redirect('interface_home')
+        return func(request, *args, **kwargs)
+
+    return inner
