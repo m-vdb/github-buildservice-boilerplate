@@ -77,7 +77,7 @@ def require_json(func):
     """
     Decorator to require that a request has a JSON-encoded body.
     """
-    @functools.wraps(view)
+    @wraps(func)
     def wrapped(request, *args, **kwargs):
         """
         Try to JSON decode the body and
@@ -89,5 +89,5 @@ def require_json(func):
             request.json = json.loads(request.body or '{}')
         except (ValueError, TypeError):
             return HttpResponseBadRequest(content='JSON body required.')
-        return view(request, *args, **kwargs)
+        return func(request, *args, **kwargs)
     return wrapped
