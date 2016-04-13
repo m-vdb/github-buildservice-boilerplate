@@ -4,7 +4,7 @@ import hashlib
 import hmac
 
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
 
 from buildservice.models import OAuthToken
@@ -71,3 +71,23 @@ def anonymous_user_required(func):
         return func(request, *args, **kwargs)
 
     return inner
+
+
+def require_json(func):
+    """
+    Decorator to require that a request has a JSON-encoded body.
+    """
+    @functools.wraps(view)
+    def wrapped(request, *args, **kwargs):
+        """
+        Try to JSON decode the body and
+        save it on the HttpRequest object.
+        In case it's not JSON, return a 400.
+        """
+        try:
+            # we don't wanna raise for empty bodies though
+            request.json = json.loads(request.body or '{}')
+        except (ValueError, TypeError):
+            return HttpResponseBadRequest(content='JSON body required.')
+        return view(request, *args, **kwargs)
+    return wrapped
