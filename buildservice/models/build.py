@@ -78,7 +78,7 @@ class Build(models.Model):
         :param status:              the status to update
         """
         # let it raise
-        token = self.repository.get_token()  # pylint disable=no-member
+        token = self.repository.get_token()  # pylint: disable=no-member
         self.status = status
         self.save()
         github.create_status(
