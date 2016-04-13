@@ -3,7 +3,7 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import UserCreationForm
 
-from buildservice.views import auth, main, oauth, webhooks
+from buildservice.views import api, auth, main, oauth, webhooks
 
 
 urlpatterns = [  # pylint: disable=invalid-name
@@ -42,4 +42,11 @@ urlpatterns = [  # pylint: disable=invalid-name
     # Webhooks
     url(r'^webhooks$', webhooks.create, name='webhooks_create'),
     url(r'^webhooks/push$', webhooks.push, name='webhooks_push'),
+
+    # API
+    url(
+        r'^api/repository/(?P<repository_name>[^/]+/[^/]+)/builds/(?P<build_number>\d+)/status$',
+        api.update_build_status,
+        name='api_build_status'
+    ),
 ]
