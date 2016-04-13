@@ -18,12 +18,12 @@ def update_build_status(request, repository_name, build_number):
     try:
         status = request.json['status']
     except (TypeError, KeyError):
-        return JsonResponse(content='Missing status field.', status=400)
+        return JsonResponse({'error': 'missing status field.'}, status=400)
 
     build = get_object_or_404(Build, repository__name=repository_name, number=build_number)
     try:
         build.update_status(status)
     except MissingToken:
-        return JsonResponse(status=400)
+        return JsonResponse({'error': 'no token'}, status=400)
 
     return JsonResponse({})

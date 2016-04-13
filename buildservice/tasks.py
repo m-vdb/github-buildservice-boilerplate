@@ -13,4 +13,4 @@ def execute_build(build_id):
 
     # when build complete...
     status = 'success'
-    build.update_status(status, token)
+    build.update_status(status)

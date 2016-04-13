@@ -2,6 +2,7 @@
 from functools import wraps
 import hashlib
 import hmac
+import json
 
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest
