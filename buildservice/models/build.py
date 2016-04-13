@@ -3,6 +3,8 @@ from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
+from buildservice.utils import github
+
 
 class Build(models.Model):
     """
@@ -66,3 +68,19 @@ class Build(models.Model):
         Return the 7 first chars of the Build's sha.
         """
         return self.sha[:7]  # pylint: disable=unsubscriptable-object
+
+    def update_status(self, status):
+        """
+        Update the Build status, both in database
+        and on github. If no token is found to update the build,
+        a MissingToken exception is raised.
+
+        :param status:              the status to update
+        """
+        token = self.repository.get_token()  # let it raise
+        self.status = status
+        self.save()
+        github.create_status(
+            token.value, self.repository, self.sha,
+            state=status, target_url=self.url
+        )
