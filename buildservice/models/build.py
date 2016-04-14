@@ -82,6 +82,6 @@ class Build(models.Model):
         self.status = status
         self.save()
         github.create_status(
-            token.value, self.repository, self.sha,
+            token.value, self.repository.name, self.sha,
             state=status, target_url=self.url
         )
