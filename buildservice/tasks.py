@@ -5,7 +5,7 @@ from buildservice.models import Build
 
 
 @job
-def execute_build(build_id):
+def run_build(build_id):
     """
     Execute a given build.
     """

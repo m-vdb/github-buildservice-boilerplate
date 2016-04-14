@@ -106,6 +106,6 @@ def push(request):
             state='pending', target_url=build.url
         )
         # launch build asynchronously
-        tasks.execute_build.delay(build.pk)
+        tasks.run_build.delay(build.pk)
 
     return HttpResponse()
