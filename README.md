@@ -41,6 +41,9 @@ You first need to setup a new [Github application](https://github.com/settings/a
 - `BUILDSERVICE_BASE_URL`: the URL of your website, example: `https://buildservice.maxvdb.com`
 - `BUILDSERVICE_APP_NAME`: the name of your website
 
+While debugging locally, you might want to use `GITHUB_USER_ID` and `GITHUB_USER_PASSWORD` instead of the
+`GITHUB_CLIENT_*` credentials.
+
 ## Useful links & inspiration
 
 - [CircleCI](https://circleci.com/)
