@@ -35,7 +35,11 @@ You first need to setup a new [Github application](https://github.com/settings/a
 
 ## Settings
 
-TODO
+- `GITHUB_CLIENT_ID`: your Github application id
+- `GITHUB_CLIENT_SECRET`: your Github application id
+- `GITHUB_HOOK_SECRET`: a hook secret, useful for webhook authentication
+- `BUILDSERVICE_BASE_URL`: the URL of your website, example: `https://buildservice.maxvdb.com`
+- `BUILDSERVICE_APP_NAME`: the name of your website
 
 ## Useful links & inspiration
 
