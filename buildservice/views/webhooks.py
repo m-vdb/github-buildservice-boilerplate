@@ -102,7 +102,7 @@ def push(request):
         )
         build.save()
         github.create_status(
-            token.value, repository.name, sha,
+            token, repository.name, sha,
             state='pending', target_url=build.url
         )
         # launch build asynchronously
