@@ -5,6 +5,7 @@ machine:
 dependencies:
   pre:
     - make settings
+    - pip install -U setuptools
   post:
     - pip install pylint
 
