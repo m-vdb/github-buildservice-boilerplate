@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
+from buildservice.errors import InvalidStatus
 from buildservice.utils import github
 
 
@@ -79,6 +80,8 @@ class Build(models.Model):
         """
         # let it raise
         token = self.repository.get_token()  # pylint: disable=no-member
+        if status not in ('success', 'pending', 'errored', 'failure'):
+            raise InvalidStatus('Invalid status.')
         self.status = status
         self.save()
         github.create_status(
