@@ -1,0 +1,5 @@
+[run]
+source = buildservice
+
+[report]
+omit = */migrations/*,
