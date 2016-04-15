@@ -10,3 +10,7 @@ class MalformattedToken(Exception):
 
 class MissingToken(Exception):
     """Raised when we cannot find a token."""
+
+
+class InvalidStatus(Exception):
+    """Raises when the Build status is invalid."""

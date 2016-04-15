@@ -170,3 +170,4 @@ if DEBUG:
 BUILDSERVICE_STATUS_CONTEXT = "continuous-integration/buildservice"
 BUILDSERVICE_BASE_URL = os.environ.get('BUILDSERVICE_BASE_URL')
 BUILDSERVICE_APP_NAME = 'Buildservice'
+BUILDSERVICE_API_KEY = os.environ.get('BUILDSERVICE_API_KEY')

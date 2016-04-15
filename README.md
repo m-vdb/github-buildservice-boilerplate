@@ -35,7 +35,14 @@ You first need to setup a new [Github application](https://github.com/settings/a
 
 ## Settings
 
-TODO
+- `GITHUB_CLIENT_ID`: your Github application id
+- `GITHUB_CLIENT_SECRET`: your Github application id
+- `GITHUB_HOOK_SECRET`: a hook secret, useful for webhook authentication
+- `BUILDSERVICE_BASE_URL`: the URL of your website, example: `https://buildservice.maxvdb.com`
+- `BUILDSERVICE_APP_NAME`: the name of your website
+
+While debugging locally, you might want to use `GITHUB_USER_ID` and `GITHUB_USER_PASSWORD` instead of the
+`GITHUB_CLIENT_*` credentials.
 
 ## Useful links & inspiration
 
@@ -45,3 +52,8 @@ TODO
 - [Dokku](http://dokku.viewdocs.io/dokku/)
 - [Bootstrap](http://getbootstrap.com/)
 - [Google Material Icons](https://design.google.com/icons/)
+
+
+TODO:
+  - build summary
+  - restart build

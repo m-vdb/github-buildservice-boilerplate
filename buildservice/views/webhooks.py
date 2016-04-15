@@ -9,7 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from buildservice import tasks
-from buildservice.models import Webhook, Build, OAuthToken, Repository
+from buildservice.errors import MissingToken
+from buildservice.models import Webhook, Build, Repository
 from buildservice.utils import github
 from buildservice.utils.decorators import oauth_token_required, signature_required
 
@@ -89,8 +90,9 @@ def push(request):
         repository.refresh_from_db()
 
         # try to find a token. If none, do nothing
-        token = OAuthToken.objects.filter(user__webhook__repository=repository).first()
-        if not token:
+        try:
+            token = repository.get_token()
+        except MissingToken:
             return HttpResponse()
         token = token.value
 
@@ -100,10 +102,10 @@ def push(request):
         )
         build.save()
         github.create_status(
-            token, repository.name, sha,
+            token.value, repository.name, sha,
             state='pending', target_url=build.url
         )
         # launch build asynchronously
-        tasks.execute_build.delay(build.pk)
+        tasks.run_build.delay(build.pk)
 
     return HttpResponse()
