@@ -5,11 +5,12 @@ from django.views.decorators.http import require_POST
 
 from buildservice.errors import MissingToken, InvalidStatus
 from buildservice.models import Build
-from buildservice.utils.decorators import require_json
+from buildservice.utils.decorators import require_json, require_api_key
 
 
 @require_json
 @require_POST
+@require_api_key
 def update_build_status(request, repository_name, build_number):
     """
     Update a build status. Useful when another

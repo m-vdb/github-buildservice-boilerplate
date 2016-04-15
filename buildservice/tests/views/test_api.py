@@ -1,11 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from mock import patch
 
 from buildservice.models import Build, Repository, OAuthToken, Webhook
 
 
+@override_settings(BUILDSERVICE_API_KEY='the_key')
 class UpdateBuildStatusTestCase(TestCase):
 
     def setUp(self):
@@ -31,7 +32,7 @@ class UpdateBuildStatusTestCase(TestCase):
 
     def test_post_missing_status(self):
         resp = self.client.post(
-            self.dummy_url, data='{"key": "value"}',
+            self.dummy_url + '?api_key=the_key', data='{"key": "value"}',
             content_type="application/json"
         )
         self.assertEqual(resp.status_code, 400)
@@ -39,22 +40,29 @@ class UpdateBuildStatusTestCase(TestCase):
 
     def test_post_json_not_dict(self):
         resp = self.client.post(
-            self.dummy_url, data='[1, 2, 3]',
+            self.dummy_url + '?api_key=the_key', data='[1, 2, 3]',
             content_type="application/json"
         )
         self.assertEqual(resp.status_code, 400)
         self.assertEqual(resp.json(), {'error': 'Missing status field.'})
 
-    def test_post_unknown_build(self):
+    def test_post_no_api_key(self):
         resp = self.client.post(
             self.dummy_url, data='{"status": "success"}',
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, 401)
+
+    def test_post_unknown_build(self):
+        resp = self.client.post(
+            self.dummy_url + '?api_key=the_key', data='{"status": "success"}',
             content_type="application/json"
         )
         self.assertEqual(resp.status_code, 404)
 
     def test_post_missing_token(self):
         resp = self.client.post(
-            self.url, data='{"status": "something"}',
+            self.url + '?api_key=the_key', data='{"status": "something"}',
             content_type="application/json"
         )
         self.assertEqual(resp.status_code, 400)
@@ -69,7 +77,7 @@ class UpdateBuildStatusTestCase(TestCase):
     def test_post_bad_status(self):
         self.setup_user()
         resp = self.client.post(
-            self.url, data='{"status": "something"}',
+            self.url + '?api_key=the_key', data='{"status": "something"}',
             content_type="application/json"
         )
         self.assertEqual(resp.status_code, 400)
@@ -79,7 +87,7 @@ class UpdateBuildStatusTestCase(TestCase):
     def test_post_ok(self, create_status):
         self.setup_user()
         resp = self.client.post(
-            self.url, data='{"status": "success"}',
+            self.url + '?api_key=the_key', data='{"status": "success"}',
             content_type="application/json"
         )
         self.assertEqual(resp.status_code, 200)

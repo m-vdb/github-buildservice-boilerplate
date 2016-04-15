@@ -92,3 +92,19 @@ def require_json(func):
             return HttpResponseBadRequest(content='JSON body required.')
         return func(request, *args, **kwargs)
     return wrapped
+
+
+def require_api_key(func):
+    """
+    Decorator to require an API key in the request GET parameters.
+    """
+    @wraps(func)
+    def wrapped(request, *args, **kwargs):
+        """
+        Try to retrieve the API key and test it against
+        our config. If this fails, return a 401.
+        """
+        if request.GET.get('api_key') != settings.BUILDSERVICE_API_KEY:
+            return HttpResponse(status=401, content='Invalid API key.')
+        return func(request, *args, **kwargs)
+    return wrapped
