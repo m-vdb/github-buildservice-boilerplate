@@ -2,6 +2,7 @@
 
 [![Circle CI](https://circleci.com/gh/m-vdb/github-buildservice-boilerplate.svg?style=shield&circle-token=005fe273ea45c0f445bddbf53f2f90594dcfce91)](https://circleci.com/gh/m-vdb/github-buildservice-boilerplate)
 [![Buildservice](https://buildservice.maxvdb.com/badge/m-vdb/github-buildservice-boilerplate.svg)](https://buildservice.maxvdb.com/repositories/m-vdb/github-buildservice-boilerplate)
+[![Coverage Status](https://coveralls.io/repos/github/m-vdb/github-buildservice-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/m-vdb/github-buildservice-boilerplate?branch=master)
 
 A boilerplate for creating a build service using Github.
 *Demo is available at https://buildservice.maxvdb.com/.*
