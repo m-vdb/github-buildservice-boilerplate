@@ -11,3 +11,4 @@ dependencies:
 test:
   override:
     - pylint buildservice --rcfile=pylint.rc
+    - ./manage.py test
