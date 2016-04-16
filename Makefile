@@ -15,3 +15,7 @@ migrate:
 
 settings:
 	cp env.tpl .env
+
+lint:
+	pylint buildservice --rcfile=pylint.rc
+	pylint buildservice/tests --rcfile=pylint.rc --method-rgx='([a-z_][a-z0-9_]{2,50}|(setUp|tearDown)(Class)?)$$' --disable=no-member,missing-docstring,too-many-ancestors
