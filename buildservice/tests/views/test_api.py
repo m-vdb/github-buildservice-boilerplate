@@ -1,9 +1,9 @@
-from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client, override_settings
 from mock import patch
 
-from buildservice.models import Build, Repository, OAuthToken, Webhook
+from buildservice.models import Build, Repository
+from buildservice.utils.testing import create_user_token
 
 
 @override_settings(BUILDSERVICE_API_KEY='the_key')
@@ -68,14 +68,8 @@ class UpdateBuildStatusTestCase(TestCase):
         self.assertEqual(resp.status_code, 400)
         self.assertEqual(resp.json(), {'error': 'No token.'})
 
-    def setup_user(self):
-        user_class = get_user_model()
-        user = user_class.objects.create_user('uuu', password='ttt')
-        OAuthToken.objects.create(user=user, value='the_token')
-        Webhook.objects.create(user=user, repository=self.repo)
-
     def test_post_bad_status(self):
-        self.setup_user()
+        create_user_token(self.repo)
         resp = self.client.post(
             self.url + '?api_key=the_key', data='{"status": "something"}',
             content_type="application/json"
@@ -85,7 +79,7 @@ class UpdateBuildStatusTestCase(TestCase):
 
     @patch('buildservice.utils.github.create_status')
     def test_post_ok(self, create_status):
-        self.setup_user()
+        token = create_user_token(self.repo)
         resp = self.client.post(
             self.url + '?api_key=the_key', data='{"status": "success"}',
             content_type="application/json"
@@ -94,6 +88,6 @@ class UpdateBuildStatusTestCase(TestCase):
         self.build.refresh_from_db()
         self.assertTrue(self.build.is_success)
         create_status.assert_called_with(
-            'the_token', 'my/repo', self.build.sha,
+            token.value, 'my/repo', self.build.sha,
             state='success', target_url=self.build.url
         )
