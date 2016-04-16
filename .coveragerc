@@ -2,4 +2,4 @@
 source = buildservice
 
 [report]
-omit = */migrations/*,
+omit = */migrations/*,wsgi.py
