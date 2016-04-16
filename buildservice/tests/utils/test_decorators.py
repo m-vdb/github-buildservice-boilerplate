@@ -14,7 +14,7 @@ from buildservice.utils.testing import create_user_token
 
 
 def view(request):
-    return HttpResponse(request.body)
+    return HttpResponse(str(request))
 
 
 view_token = decorators.oauth_token_required(view)
