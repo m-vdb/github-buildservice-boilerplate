@@ -70,27 +70,32 @@ class PushWebhooksTestCase(TestCase):
         resp = self.do_proper_post()
         self.assertEqual(resp.status_code, 200)
 
+    @patch('buildservice.tasks.run_build.delay')
     @patch('buildservice.utils.github.create_status')
-    def test_post_other_event(self, create_status):
+    def test_post_other_event(self, create_status, run_build):
         resp = self.do_proper_post(event='pull')
         self.assertEqual(resp.status_code, 200)
         self.assertFalse(create_status.called)
+        self.assertFalse(run_build.called)
 
     def test_post_unknown_repo(self):
         resp = self.do_proper_post(data=self.payload)
         self.assertEqual(resp.status_code, 404)
 
+    @patch('buildservice.tasks.run_build.delay')
     @patch('buildservice.utils.github.create_status')
-    def test_post_missing_token(self, create_status):
+    def test_post_missing_token(self, create_status, run_build):
         repo = Repository.objects.create(name='user/great-repo')
         resp = self.do_proper_post(data=self.payload)
         self.assertEqual(resp.status_code, 200)
         repo.refresh_from_db()
         self.assertEqual(repo.build_count, 1)
         self.assertFalse(create_status.called)
+        self.assertFalse(run_build.called)
 
+    @patch('buildservice.tasks.run_build.delay')
     @patch('buildservice.utils.github.create_status')
-    def test_post_ok(self, create_status):
+    def test_post_ok(self, create_status, run_build):
         repo = Repository.objects.create(name='user/great-repo')
         token = create_user_token(repo)
         resp = self.do_proper_post(data=self.payload)
@@ -105,3 +110,4 @@ class PushWebhooksTestCase(TestCase):
             token.value, repo.name, build.sha,
             state='pending', target_url=build.url
         )
+        run_build.assert_called_with(build.pk)
