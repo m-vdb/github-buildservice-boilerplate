@@ -63,9 +63,9 @@ def create(request):
     return redirect('home')
 
 
+@require_POST
 @signature_required
 @csrf_exempt
-@require_POST
 def push(request):
     """
     The Push webhook. It's directly hit by
