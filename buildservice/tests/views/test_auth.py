@@ -23,7 +23,7 @@ class RegisterViewTestCase(TestCase):
 
     def test_post_already_authenticated(self):
         self.assertTrue(self.client.login(username='aaa', password='ttt'))
-        resp = self.client.post(self.url, {'username': 'bbb', 'password1': 'ppp', 'password1': 'ppp'})
+        resp = self.client.post(self.url, {'username': 'bbb', 'password1': 'p', 'password2': 'p'})
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(resp.url, '/')
         self.assertIsNone(get_user_model().objects.filter(username='bbb').first())
