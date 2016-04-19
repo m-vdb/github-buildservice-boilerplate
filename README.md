@@ -53,8 +53,3 @@ While debugging locally, you might want to use `GITHUB_USER_ID` and `GITHUB_USER
 - [Dokku](http://dokku.viewdocs.io/dokku/)
 - [Bootstrap](http://getbootstrap.com/)
 - [Google Material Icons](https://design.google.com/icons/)
-
-
-TODO:
-  - build summary
-  - restart build
