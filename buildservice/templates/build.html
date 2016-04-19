@@ -1,5 +1,15 @@
 {% extends "base.html" %}
+{% load utils %}
 
 {% block body %}
-Build view :)
+<h1>Build #{{ build.number }} <small>{{ build.branch }} ({{ build.short_sha }})</small></h1>
+<p>
+  <i class="material-icons text-{% build_icon_color build %}">
+    {% build_icon build %}
+  </i>
+  Pushed by {{ build.pusher_name }} - <i>{{ build.created_at|timesince }} ago</i>
+</p>
+<p>
+  Here comes the build detail...
+</p>
 {% endblock %}
