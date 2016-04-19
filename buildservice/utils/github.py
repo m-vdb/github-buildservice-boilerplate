@@ -1,6 +1,6 @@
 """Github utils method"""
 from django.conf import settings
-from github3 import login
+import github3
 
 from buildservice.errors import CannotCreateHook
 
@@ -67,6 +67,6 @@ def _github_login(token):
     login/password in dev.
     """
     if settings.DEBUG and settings.GITHUB_USER_ID:
-        return login(settings.GITHUB_USER_ID, password=settings.GITHUB_USER_PASSWORD)
+        return github3.login(settings.GITHUB_USER_ID, password=settings.GITHUB_USER_PASSWORD)
 
-    return login(token=token)
+    return github3.login(token=token)
