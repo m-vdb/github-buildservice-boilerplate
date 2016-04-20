@@ -21,21 +21,30 @@ code push. The definition of "build" is up to you. Here is the skeleton:
 - a badge view: a simple endpoint to retrieve the SVG badge of a repository, like [this one](https://buildservice.maxvdb.com/badge/m-vdb/github-buildservice-boilerplate.svg)
 - a simple web API:
   - a webhook that receives calls from Github
-  - an internal endpoint that accepts build status changes - *useful in case an other service runs builds*
-- an asynchronous task system based on [django-rq](https://github.com/ui/django-rq) - *useful in case this service runs builds*
+  - an internal endpoint that accepts build status changes - *useful in case an other service runs the builds*
+- an asynchronous task system based on [django-rq](https://github.com/ui/django-rq) - *useful in case this service runs the builds*
 
-## What this project doesn't cover
+## Project Scope
 
-This project isn't a full build service. It doesn't tackle containerization of the builds. You can use this service as the center part of a full service; it will receive calls from Github and may communicate with your other micro-services.
+This project isn't a full build service. It doesn't tackle:
+- containerization
+- build restart
+- per-branch views
 
-This project doesn't either cover the UI part in full - no fancy front-end framework here, just plain [Django views](https://docs.djangoproject.com/en/1.9/topics/http/views/).
+You can use this boilerplate to create the central node of a more complex architecture.
+
+This project doesn't either provide a full UI - no fancy front-end framework here, just plain [Django views](https://docs.djangoproject.com/en/1.9/topics/http/views/).
 
 ## Installation and setup
 
-You first need to setup a new [Github application](https://github.com/settings/applications/new). All the tokens will be granted for this application. Be careful to define your _Authorization callback URL_ as follow: `https://<domain>/oauth/callback`. You'l need HTTPS.
+You first need to create a [Github application](https://github.com/settings/applications/new). The app will ask for user permissions (on behalf of the Github application) and save tokens in database for later use. Be careful to define your _Authorization callback URL_ as follow: `https://<domain>/oauth/callback`. You'll need HTTPS.
 
 ## Settings
 
+- `DEBUG`: set to `True` to enable Django debug
+- `DATABASE_URL`: your main database URI, e.g. `postgres://<user>:<passsword>@<host>:5432/<database>`
+- `REDIS_URL`: your broker URI, useful fo asynchronous tasks (used by _django-rq_), e.g. `127.0.0.1:6379`
+- `SECRET_KEY`: required by Django for cryptographic signing
 - `GITHUB_CLIENT_ID`: your Github application id
 - `GITHUB_CLIENT_SECRET`: your Github application id
 - `GITHUB_HOOK_SECRET`: a hook secret, useful for webhook authentication
@@ -53,3 +62,11 @@ While debugging locally, you might want to use `GITHUB_USER_ID` and `GITHUB_USER
 - [Dokku](http://dokku.viewdocs.io/dokku/)
 - [Bootstrap](http://getbootstrap.com/)
 - [Google Material Icons](https://design.google.com/icons/)
+
+
+## Troubleshooting
+
+### My repository badge doesn't update
+
+Github _aggressively_ caches content. Make sure to have ETags enabled on your webserver.
+If you're using [nginx](https://www.nginx.com/), ETags are ignored if the content is gzipped. Don't forget to remove the SVG mimetype from the `gzip_types` directive.
