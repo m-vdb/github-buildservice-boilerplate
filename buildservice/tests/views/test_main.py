@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.template.loader import render_to_string
 from django.test import TestCase, Client
 from mock import patch
 
@@ -20,9 +22,9 @@ class MainViewsTestCase(TestCase):
         self.client = Client()
         self.user = get_user_model().objects.create_user('user', password='pwd')
         self.repo = Repository.objects.create(name='user/repo-super-duper')
-        Build.objects.create(
+        self.build = Build.objects.create(
             repository=self.repo,
-            branch='the-branch',
+            branch='master',
             sha='abcdef1234567890',
             pusher_name='doe'
         )
@@ -65,3 +67,72 @@ class MainViewsTestCase(TestCase):
         resp = self.client.get(reverse('register_repositories'))
         self.assertEqual(resp.status_code, 200)
         get_user_repos.assert_called_with(token.value)
+
+    def check_badge_response(self, resp, status='unknown'):
+        tpl = "svg/buildservice-%s.svg" % status
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(
+            resp.content,
+            render_to_string(tpl, {'app_name': settings.BUILDSERVICE_APP_NAME})
+        )
+
+    def test_badge_repo_not_found(self):
+        resp = self.client.get(reverse('repository_badge', args=('user/unknown-dude...', )))
+        self.check_badge_response(resp)
+
+    def test_badge_no_build(self):
+        self.build.delete()
+        resp = self.client.get(reverse('repository_badge', args=('user/repo-super-duper', )))
+        self.check_badge_response(resp)
+
+    def test_badge_success(self):
+        Build.objects.create(
+            repository=self.repo,
+            branch='master',
+            sha='abcdef1234567890',
+            pusher_name='doe',
+            status='success',
+            number=2
+        )
+        resp = self.client.get(reverse('repository_badge', args=('user/repo-super-duper', )))
+        self.check_badge_response(resp, 'success')
+
+    def test_badge_failure(self):
+        Build.objects.create(
+            repository=self.repo,
+            branch='master',
+            sha='abcdef1234567890',
+            pusher_name='doe',
+            status='failure',
+            number=2
+        )
+        resp = self.client.get(reverse('repository_badge', args=('user/repo-super-duper', )))
+        self.check_badge_response(resp, 'failure')
+
+    def test_badge_errored(self):
+        Build.objects.create(
+            repository=self.repo,
+            branch='master',
+            sha='abcdef1234567890',
+            pusher_name='doe',
+            status='errored',
+            number=2
+        )
+        resp = self.client.get(reverse('repository_badge', args=('user/repo-super-duper', )))
+        self.check_badge_response(resp, 'errored')
+
+    def test_badge_only_pending(self):
+        resp = self.client.get(reverse('repository_badge', args=('user/repo-super-duper', )))
+        self.check_badge_response(resp)
+
+    def test_badge_other_branch(self):
+        Build.objects.create(
+            repository=self.repo,
+            branch='boom',
+            sha='abcdef1234567890',
+            pusher_name='doe',
+            status='success',
+            number=2
+        )
+        resp = self.client.get(reverse('repository_badge', args=('user/repo-super-duper', 'boom')))
+        self.check_badge_response(resp, 'success')
