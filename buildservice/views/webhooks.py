@@ -17,50 +17,56 @@ from buildservice.utils.decorators import oauth_token_required, signature_requir
 
 @login_required
 @oauth_token_required
-@require_POST
-def create(request):
+def add_webhook(request, repository_name):
     """
-    This view creates Webhook(s). Additionally,
-    it handles webhook deactivation.
+    Add a new webhook to a repository.
     """
-    repos = set()
-    for name, value in request.POST.iteritems():
-        if name.startswith('repo_') and value == 'on':
-            repos.add(name[5:])
+    done = lambda: redirect('repository_detail', repository_name=repository_name)
+
+    hook = Webhook.objects.filter(repository__name=repository_name).first()
+    if hook and hook.active:
+        return done()
 
     user = request.user
     token = user.oauth_token.value
-    # compute the diff of repos
-    repos_with_hook = set(
-        user.webhook_set.filter(active=True).values_list('repository__name', flat=True)
+    hook_url = Webhook.get_push_url()
+
+    # get or create repo
+    defaults = {}
+    if request.GET.get('default_branch'):
+        defaults['default_branch'] = request.GET.get('default_branch')
+    repo, _ = Repository.objects.get_or_create(
+        name=repository_name, defaults=defaults
     )
-    new_repos = repos - repos_with_hook
-    deactivated_repos = repos_with_hook - repos
+    hook_id = github.create_webhook(token, repo.name, hook_url)
+    # update or create Webhook, will work if we disabled and re-enabled
+    Webhook.objects.update_or_create(
+        user=user, repository=repo,
+        defaults={"github_id": hook_id, "active": True}
+    )
 
-    # create new hooks
-    if new_repos:
-        hook_url = Webhook.get_push_url()
-        for repo in new_repos:
-            repo, _ = Repository.objects.get_or_create(
-                name=repo,
-                defaults={
-                    'default_branch': request.POST['default_branch_%s' % repo]
-                }
-            )
-            hook_id = github.create_webhook(token, repo.name, hook_url)
-            Webhook.objects.update_or_create(
-                user=user, repository=repo,
-                defaults={"github_id": hook_id, "active": True}
-            )
+    return done()
 
-    # deactivate some hooks
-    if deactivated_repos:
-        hooks = Webhook.objects.filter(repository__name__in=deactivated_repos)
-        for hook in hooks:
-            github.delete_webhook(token, hook.repository.name, hook.github_id)
-        hooks.update(active=False, github_id=0)
 
-    return redirect('home')
+@login_required
+@oauth_token_required
+def remove_webhook(request, repository_name):
+    """
+    Remove webhook from a repository.
+    """
+    done = lambda: redirect('home')
+
+    hook = Webhook.objects.filter(repository__name=repository_name).first()
+    if not hook:
+        return done()
+
+    token = request.user.oauth_token.value
+    github.delete_webhook(token, repository_name, hook.github_id)
+    hook.active = False
+    hook.github_id = 0
+    hook.save()
+
+    return done()
 
 
 @require_POST

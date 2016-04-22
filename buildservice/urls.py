@@ -40,7 +40,8 @@ urlpatterns = [  # pylint: disable=invalid-name
     url(r'^oauth/callback$', oauth.callback, name='oauth_callback'),
 
     # Webhooks
-    url(r'^webhooks$', webhooks.create, name='webhooks_create'),
+    url(r'^webhooks/add/(?P<repository_name>[^/]+/[^/]+)$', webhooks.add_webhook, name='webhooks_add'),
+    url(r'^webhooks/remove/(?P<repository_name>[^/]+/[^/]+)$', webhooks.remove_webhook, name='webhooks_remove'),
     url(r'^webhooks/push$', webhooks.push, name='webhooks_push'),
 
     # API
