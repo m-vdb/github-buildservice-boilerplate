@@ -4,24 +4,26 @@
 <div class="row">
   <div class="col-sm-8">
     <h1>Choose repositories to register</h1>
-    <form class="form" method="post" action="{% url 'webhooks_create' %}">
-      {% csrf_token %}
-      {% for section, repos in repositories %}
-      <ul class="list-group">
-        {% for repo in repos %}
-        <li class="list-group-item">
-          <input type="checkbox" name="repo_{{ repo.full_name }}"
-                 {% if repo.full_name in active_hooks %}checked="checked"{% endif %}>
-          {{ repo.full_name }}
-          <input type="hidden" name="default_branch_{{ repo.full_name }}" value="{{ repo.default_branch }}"/>
-        </li>
-        {% endfor %}
-      </ul><br/>
+    {% for section, repos in repositories %}
+    <ul class="list-group">
+      {% for repo in repos %}
+      <li class="list-group-item">
+        <span class="pull-xs-right">
+        {% if repo.full_name in active_hooks %}
+        <a href="{% url 'webhooks_remove' repo.full_name %}">
+          <i class="material-icons text-danger">remove_circle_outline</i>
+        </a>
+        {% else %}
+        <a href="{% url 'webhooks_add' repo.full_name %}?default_branch={{ repo.default_branch }}">
+          <i class="material-icons text-success">add_circle_outline</i>
+        </a>
+        {% endif %}
+        </span>
+        {{ repo.full_name }}
+      </li>
       {% endfor %}
-      <div class="text-sm-right">
-        <input type="submit" value="Register selected repositories" class="btn btn-primary" />
-      </div>
-    </form>
+    </ul><br/>
+    {% endfor %}
   </div>
 </div>
 {% endblock %}
