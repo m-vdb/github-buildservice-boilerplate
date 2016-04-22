@@ -12,6 +12,8 @@
     <a href="{% url "build_detail" build.repository.name build.number %}">{{ build.short_sha }}</a>
     on {{ build.branch}}, by {{ build.pusher_name }}, <i>{{ build.created_at|timesince }} ago</i>
   </li>
+  {% empty %}
+  <li class="list-group-item">No builds yet</li>
   {% endfor %}
 </ul>
 {% endblock %}
