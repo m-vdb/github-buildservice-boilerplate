@@ -21,7 +21,7 @@ urlpatterns = [  # pylint: disable=invalid-name
     ),
     url(r'^repositories/register$', main.register_repositories, name='register_repositories'),
     url(
-        r'^badge/(?P<repo_name>[^\:]+/[^\:]+)(?:\:(?P<branch_name>.+))?\.svg$',
+        r'^badge/(?P<repository_name>[^\:]+/[^\:]+)(?:\:(?P<branch_name>.+))?\.svg$',
         main.badge,
         name='repository_badge'
     ),

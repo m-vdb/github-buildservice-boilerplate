@@ -64,14 +64,14 @@ def register_repositories(request):
 
 
 @cache_control(no_cache=True)
-def badge(request, repo_name, branch_name=None):
+def badge(request, repository_name, branch_name=None):
     """
     Return a svg that gives the build status of the repository.
     """
     svg_name = "svg/buildservice-%s.svg"
     status = "unknown"
     try:
-        repository = Repository.objects.get(name=repo_name)
+        repository = Repository.objects.get(name=repository_name)
     except Repository.DoesNotExist:
         pass
     else:
