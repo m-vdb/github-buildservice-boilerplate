@@ -33,7 +33,7 @@ class AddWebhooksTestCase(TestCase):
 
     @patch('buildservice.utils.github.create_webhook')
     def test_get_hook_active(self, create_webhook):
-        hook = Webhook.objects.create(user=self.user, repository=self.repo, github_id=8082)
+        Webhook.objects.create(user=self.user, repository=self.repo, github_id=8082)
         self.client.login(username='user', password='pwd')
         create_user_token(user=self.user)
         resp = self.client.get(self.url)
@@ -56,7 +56,7 @@ class AddWebhooksTestCase(TestCase):
         self.assertEqual(hook.github_id, 26192)
 
     @patch('buildservice.utils.github.create_webhook', return_value=26192)
-    def check_hook_creation(self, branch, create_webhook):
+    def check_hook_creation(self, branch, create_webhook=None):
         url = self.url
         if branch != 'master':
             url += '?default_branch=' + branch
