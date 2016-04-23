@@ -14,5 +14,5 @@ def create_user_token(repo=None, user=None):
         user = user_class.objects.create_user('uuu', password='ttt')
     token = OAuthToken.objects.create(user=user, value='the_token')
     if repo:
-        Webhook.objects.create(user=user, repository=repo)
+        Webhook.objects.create(repository=repo)
     return token
