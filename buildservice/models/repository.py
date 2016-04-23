@@ -25,7 +25,7 @@ class Repository(models.Model):
         Get a token for the repository. If none
         is found, a MissingToken exception is raised.
         """
-        token = OAuthToken.objects.filter(user__repositories=self).first()
+        token = OAuthToken.objects.filter(user__in=self.users.all()).first()
         if not token:
             raise MissingToken('Cannot find token for repository %s' % self)
 
