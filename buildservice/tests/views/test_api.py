@@ -72,7 +72,7 @@ class UpdateBuildStatusTestCase(TestCase):
         self.assertEqual(resp.json(), {'error': 'No token.'})
 
     def test_post_bad_status(self):
-        create_user_token(self.repo, self.user)
+        create_user_token(self.user, self.repo)
         resp = self.client.post(
             self.url + '?api_key=the_key', data='{"status": "something"}',
             content_type="application/json"
@@ -82,7 +82,7 @@ class UpdateBuildStatusTestCase(TestCase):
 
     @patch('buildservice.utils.github.create_status')
     def test_post_ok(self, create_status):
-        token = create_user_token(self.repo, self.user)
+        token = create_user_token(self.user, self.repo)
         resp = self.client.post(
             self.url + '?api_key=the_key', data='{"status": "success"}',
             content_type="application/json"

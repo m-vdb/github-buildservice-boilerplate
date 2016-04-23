@@ -45,26 +45,26 @@ class MainViewsTestCase(TestCase):
 
     def test_get_home(self):
         self.client.login(username='user', password='pwd')
-        create_user_token(self.repo, self.user)
+        create_user_token(self.user, self.repo)
         resp = self.client.get(reverse('home'))
         self.assertEqual(resp.status_code, 200)
 
     def test_get_repository_detail(self):
         self.client.login(username='user', password='pwd')
-        create_user_token(self.repo, self.user)
+        create_user_token(self.user, self.repo)
         resp = self.client.get(reverse('repository_detail', args=('user/repo-super-duper', )))
         self.assertEqual(resp.status_code, 200)
 
     def test_get_build_detail(self):
         self.client.login(username='user', password='pwd')
-        create_user_token(self.repo, self.user)
+        create_user_token(self.user, self.repo)
         resp = self.client.get(reverse('build_detail', args=('user/repo-super-duper', '1')))
         self.assertEqual(resp.status_code, 200)
 
     @patch('buildservice.utils.github.get_user_repos')
     def test_get_register_repositories(self, get_user_repos):
         self.client.login(username='user', password='pwd')
-        token = create_user_token(self.repo, self.user)
+        token = create_user_token(self.user, self.repo)
         resp = self.client.get(reverse('register_repositories'))
         self.assertEqual(resp.status_code, 200)
         get_user_repos.assert_called_with(token.value)

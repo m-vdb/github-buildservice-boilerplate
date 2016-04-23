@@ -36,7 +36,7 @@ class AddWebhooksTestCase(TestCase):
     def test_get_hook_active(self, create_webhook):
         Webhook.objects.create(repository=self.repo, github_id=8082)
         self.client.login(username='user', password='pwd')
-        create_user_token(user=self.user)
+        create_user_token(self.user)
         resp = self.client.get(self.url)
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(resp.url, self.redirect_url)
@@ -46,7 +46,7 @@ class AddWebhooksTestCase(TestCase):
     def test_get_hook_inactive(self, create_webhook):
         hook = Webhook.objects.create(repository=self.repo, active=False)
         self.client.login(username='user', password='pwd')
-        token = create_user_token(user=self.user)
+        token = create_user_token(self.user)
 
         resp = self.client.get(self.url)
         self.assertEqual(resp.status_code, 302)
@@ -64,7 +64,7 @@ class AddWebhooksTestCase(TestCase):
 
         self.repo.delete()
         self.client.login(username='user', password='pwd')
-        token = create_user_token(user=self.user)
+        token = create_user_token(self.user)
 
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 302)
@@ -106,7 +106,7 @@ class RemoveWebhooksTestCase(TestCase):
 
     def test_get_no_hook(self):
         self.client.login(username='user', password='pwd')
-        create_user_token(user=self.user)
+        create_user_token(self.user)
         resp = self.client.get(self.url)
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(resp.url, self.redirect_url)
@@ -115,7 +115,7 @@ class RemoveWebhooksTestCase(TestCase):
     def test_get_ok(self, delete_webhook):
         hook = Webhook.objects.create(repository=self.repo, github_id=127686)
         self.client.login(username='user', password='pwd')
-        token = create_user_token(user=self.user)
+        token = create_user_token(self.user)
 
         resp = self.client.get(self.url)
         self.assertEqual(resp.status_code, 302)
@@ -213,7 +213,7 @@ class PushWebhooksTestCase(TestCase):
         repo = Repository.objects.create(name='user/great-repo')
         user = get_user_model().objects.create_user('user', password='pwd')
         repo.users.add(user)
-        token = create_user_token(repo, user)
+        token = create_user_token(user, repo)
         resp = self.do_proper_post(data=self.payload)
         self.assertEqual(resp.status_code, 200)
         repo.refresh_from_db()

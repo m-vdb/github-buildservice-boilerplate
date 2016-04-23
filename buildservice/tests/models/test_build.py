@@ -51,14 +51,14 @@ class BuildTestCase(TestCase):
         self.assertRaises(MissingToken, self.build.update_status, 'something')
 
     def test_update_status_bad_status(self):
-        create_user_token(self.repo, self.user)
+        create_user_token(self.user, self.repo)
         self.assertRaises(InvalidStatus, self.build.update_status, 'something')
         self.build.refresh_from_db()
         self.assertEqual(self.build.status, 'pending')
 
     @patch('buildservice.utils.github.create_status')
     def test_update_status_ok(self, create_status):
-        token = create_user_token(self.repo, self.user)
+        token = create_user_token(self.user, self.repo)
         self.build.update_status('success')
         self.build.refresh_from_db()
         self.assertEqual(self.build.status, 'success')
