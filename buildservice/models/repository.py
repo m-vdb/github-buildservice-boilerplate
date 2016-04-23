@@ -20,6 +20,12 @@ class Repository(models.Model):
     build_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        """
+        Return the name of the repository.
+        """
+        return self.name
+
     def get_token(self):
         """
         Get a token for the repository. If none
