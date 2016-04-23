@@ -13,8 +13,10 @@ class ContextProcessorsTestCase(TestCase):
         self.user = get_user_model().objects.create_user('ccc', password='ttt')
         self.repo1 = Repository.objects.create(name='zzzdummy/repo1')
         self.repo2 = Repository.objects.create(name='other/repo2')
-        Webhook.objects.create(user=self.user, repository=self.repo1)
-        Webhook.objects.create(user=self.user, repository=self.repo2)
+        self.repo1.users.add(self.user)
+        self.repo2.users.add(self.user)
+        Webhook.objects.create(repository=self.repo1)
+        Webhook.objects.create(repository=self.repo2)
 
     def test_base(self):
         req = HttpRequest()

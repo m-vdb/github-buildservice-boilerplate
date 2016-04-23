@@ -17,6 +17,7 @@ class AddWebhooksTestCase(TestCase):
         self.client = Client()
         self.user = get_user_model().objects.create_user('user', password='pwd')
         self.repo = Repository.objects.create(name='user/repo-mega-duper')
+        self.repo.users.add(self.user)
         self.url = reverse('webhooks_add', args=(self.repo.name, ))
         self.redirect_url = reverse('repository_detail', args=(self.repo.name, ))
 
@@ -33,7 +34,7 @@ class AddWebhooksTestCase(TestCase):
 
     @patch('buildservice.utils.github.create_webhook')
     def test_get_hook_active(self, create_webhook):
-        Webhook.objects.create(user=self.user, repository=self.repo, github_id=8082)
+        Webhook.objects.create(repository=self.repo, github_id=8082)
         self.client.login(username='user', password='pwd')
         create_user_token(user=self.user)
         resp = self.client.get(self.url)
@@ -43,7 +44,7 @@ class AddWebhooksTestCase(TestCase):
 
     @patch('buildservice.utils.github.create_webhook', return_value=26192)
     def test_get_hook_inactive(self, create_webhook):
-        hook = Webhook.objects.create(user=self.user, repository=self.repo, active=False)
+        hook = Webhook.objects.create(repository=self.repo, active=False)
         self.client.login(username='user', password='pwd')
         token = create_user_token(user=self.user)
 
@@ -88,6 +89,7 @@ class RemoveWebhooksTestCase(TestCase):
         self.client = Client()
         self.user = get_user_model().objects.create_user('user', password='pwd')
         self.repo = Repository.objects.create(name='user/repo-mega-duper')
+        self.repo.users.add(self.user)
         self.url = reverse('webhooks_remove', args=(self.repo.name, ))
         self.redirect_url = reverse('home')
 
@@ -111,7 +113,7 @@ class RemoveWebhooksTestCase(TestCase):
 
     @patch('buildservice.utils.github.delete_webhook')
     def test_get_ok(self, delete_webhook):
-        hook = Webhook.objects.create(user=self.user, repository=self.repo, github_id=127686)
+        hook = Webhook.objects.create(repository=self.repo, github_id=127686)
         self.client.login(username='user', password='pwd')
         token = create_user_token(user=self.user)
 
@@ -196,6 +198,8 @@ class PushWebhooksTestCase(TestCase):
     @patch('buildservice.utils.github.create_status')
     def test_post_missing_token(self, create_status, run_build):
         repo = Repository.objects.create(name='user/great-repo')
+        user = get_user_model().objects.create_user('user', password='pwd')
+        repo.users.add(user)
         resp = self.do_proper_post(data=self.payload)
         self.assertEqual(resp.status_code, 200)
         repo.refresh_from_db()
@@ -207,7 +211,9 @@ class PushWebhooksTestCase(TestCase):
     @patch('buildservice.utils.github.create_status')
     def test_post_ok(self, create_status, run_build):
         repo = Repository.objects.create(name='user/great-repo')
-        token = create_user_token(repo)
+        user = get_user_model().objects.create_user('user', password='pwd')
+        repo.users.add(user)
+        token = create_user_token(repo, user)
         resp = self.do_proper_post(data=self.payload)
         self.assertEqual(resp.status_code, 200)
         repo.refresh_from_db()

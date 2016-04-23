@@ -22,6 +22,7 @@ class MainViewsTestCase(TestCase):
         self.client = Client()
         self.user = get_user_model().objects.create_user('user', password='pwd')
         self.repo = Repository.objects.create(name='user/repo-super-duper')
+        self.repo.users.add(self.user)
         self.build = Build.objects.create(
             repository=self.repo,
             branch='master',

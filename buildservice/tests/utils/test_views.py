@@ -31,7 +31,7 @@ class ViewsUtilsTestCase(TestCase):
         user = get_user_model().objects.create_user(username='yop', password='yyy')
         r1 = Repository.objects.create(name='user/r1')
         r2 = Repository.objects.create(name='user/r2')
-        r3 = Repository.objects.create(name='user/r3')
+        Repository.objects.create(name='user/r3')
         r1.users.add(user)
         r2.users.add(user)
         Webhook.objects.create(repository=r1)

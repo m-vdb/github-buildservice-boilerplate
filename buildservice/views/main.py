@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.cache import cache_control
 
-from buildservice.models import Repository, Build, Webhook
+from buildservice.models import Repository, Build
 from buildservice.utils import github
 from buildservice.utils.decorators import oauth_token_required
 from buildservice.utils.views import group_repositories, get_user_active_repositories
@@ -55,7 +55,7 @@ def register_repositories(request):
     """
     user = request.user
     token = user.oauth_token.value
-    active_repos = get_user_active_repositories(user).values_list('name', flat=True)
+    active_repos = get_user_active_repositories(user).values_list('name', flat=True)  # pylint: disable=no-member
     repos = github.get_user_repos(token)
     # needed for CSRF
     return render(request, "register_repositories.html", {

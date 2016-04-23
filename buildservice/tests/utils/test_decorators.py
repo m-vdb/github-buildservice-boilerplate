@@ -48,6 +48,7 @@ class DecoratorsTestCase(TestCase):
         req = HttpRequest()
         req.user = self.user
         repo = Repository.objects.create(name='some/repo')
+        repo.users.add(self.user)
         create_user_token(repo, self.user)
         resp = view_token(req)
         self.assertEqual(resp.status_code, 200)

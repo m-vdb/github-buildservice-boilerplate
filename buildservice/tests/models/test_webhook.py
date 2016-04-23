@@ -11,7 +11,8 @@ class WebhookTestCase(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user('zzz', password='ttt')
         self.repo = Repository.objects.create(name='john-doe/repo')
-        self.webhook = Webhook.objects.create(user=self.user, repository=self.repo)
+        self.repo.users.add(self.user)
+        self.webhook = Webhook.objects.create(repository=self.repo)
 
     def test_get_push_url(self):
         push_url = reverse('webhooks_push')
