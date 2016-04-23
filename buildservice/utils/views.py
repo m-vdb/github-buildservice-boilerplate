@@ -25,3 +25,14 @@ def group_repositories(repos):
     # and compare lowercase
     order = lambda t: 'z' * 100 if t[0] == 'Other' else t[0].lower()
     return sorted(sections.items(), key=order)
+
+
+def get_user_active_repositories(user):
+    """
+    Return all the active repositories for a user.
+    It returns an empty list if the user is anonymous.
+    """
+    try:
+        return user.repositories.filter(webhook__active=True)
+    except AttributeError:
+        return []
