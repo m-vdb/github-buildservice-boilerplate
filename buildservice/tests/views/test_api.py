@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client, override_settings
 from mock import patch
@@ -13,6 +14,8 @@ class UpdateBuildStatusTestCase(TestCase):
         self.client = Client()
         self.dummy_url = reverse('api_build_status', args=('unknown/repo', '42'))
         self.repo = Repository.objects.create(name='my/repo')
+        self.user = get_user_model().objects.create_user('wiqheq', password='ttt')
+        self.repo.users.add(self.user)
         self.build = Build.objects.create(
             repository=self.repo, branch='master',
             sha='0000', pusher_name='mvdb'
@@ -69,7 +72,7 @@ class UpdateBuildStatusTestCase(TestCase):
         self.assertEqual(resp.json(), {'error': 'No token.'})
 
     def test_post_bad_status(self):
-        create_user_token(self.repo)
+        create_user_token(self.user, self.repo)
         resp = self.client.post(
             self.url + '?api_key=the_key', data='{"status": "something"}',
             content_type="application/json"
@@ -79,7 +82,7 @@ class UpdateBuildStatusTestCase(TestCase):
 
     @patch('buildservice.utils.github.create_status')
     def test_post_ok(self, create_status):
-        token = create_user_token(self.repo)
+        token = create_user_token(self.user, self.repo)
         resp = self.client.post(
             self.url + '?api_key=the_key', data='{"status": "success"}',
             content_type="application/json"

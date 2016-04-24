@@ -9,10 +9,6 @@ class Webhook(models.Model):
     A database record containing a user's webhook to
     a repository. There can be several hooks per user.
     """
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
     repository = models.ForeignKey('Repository')
     github_id = models.IntegerField(default=0)
     active = models.BooleanField(default=True)

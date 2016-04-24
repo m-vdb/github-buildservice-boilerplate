@@ -6,7 +6,7 @@ from django.views.decorators.cache import cache_control
 from buildservice.models import Repository, Build
 from buildservice.utils import github
 from buildservice.utils.decorators import oauth_token_required
-from buildservice.utils.views import group_repositories
+from buildservice.utils.views import group_repositories, get_user_active_repositories
 
 
 @login_required
@@ -53,13 +53,14 @@ def register_repositories(request):
     repositories and makes it possible to activate
     or deactivate webhooks.
     """
-    token = request.user.oauth_token.value
-    hooks = request.user.webhook_set.filter(active=True)
+    user = request.user
+    token = user.oauth_token.value
+    active_repos = get_user_active_repositories(user).values_list('name', flat=True)  # pylint: disable=no-member
     repos = github.get_user_repos(token)
     # needed for CSRF
     return render(request, "register_repositories.html", {
         "repositories": group_repositories(repos),
-        "active_hooks": set(hook.repository.name for hook in hooks)
+        "active_hooks": active_repos
     })
 
 

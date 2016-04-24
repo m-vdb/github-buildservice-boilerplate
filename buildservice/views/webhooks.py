@@ -38,10 +38,11 @@ def add_webhook(request, repository_name):
     repo, _ = Repository.objects.get_or_create(
         name=repository_name, defaults=defaults
     )
+    repo.users.add(user)
     hook_id = github.create_webhook(token, repo.name, hook_url)
     # update or create Webhook, will work if we disabled and re-enabled
     Webhook.objects.update_or_create(
-        user=user, repository=repo,
+        repository=repo,
         defaults={"github_id": hook_id, "active": True}
     )
 

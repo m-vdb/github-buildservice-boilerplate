@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from mock import patch
 
@@ -12,7 +13,9 @@ class TasksTestCase(TestCase):
 
     @patch.object(Build, 'update_status')
     def test_run_build_ok(self, update_status):  # pylint: disable=no-self-use
+        user = get_user_model().objects.create_user('user', password='pwd')
         repo = Repository.objects.create(name='john-doe/repo')
+        repo.users.add(user)
         build = Build.objects.create(
             repository=repo,
             pusher_name='john-doe',

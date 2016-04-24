@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, Client, override_settings
 from mock import patch
 
-from buildservice.models import OAuthToken
+from buildservice.models import OAuthToken, Repository
 
 
 @override_settings(GITHUB_CLIENT_SECRET='the_secret')
@@ -75,8 +75,9 @@ class OAuthViewsTestCase(TestCase):
         self.assertEqual(resp.status_code, 400)
         self.assertEqual(resp.content, 'Cannot read access_token.')
 
+    @patch.object(Repository, 'add_user_to_known_repositories')
     @patch('requests_oauthlib.OAuth2Session.fetch_token', return_value={'access_token': 'abc'})
-    def test_callback_ok(self, fetch_token):
+    def test_callback_ok(self, fetch_token, add_repos):
         self.assertTrue(self.client.login(username='user', password='pwd'))
         session = self.client.session
         session['oauth_state'] = 'the_state'
@@ -87,6 +88,7 @@ class OAuthViewsTestCase(TestCase):
             client_secret='the_secret',
             authorization_response=resp.wsgi_request.build_absolute_uri()
         )
+        add_repos.assert_called_with(self.user)
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(resp.url, '/')
         token = OAuthToken.objects.get(user=self.user)

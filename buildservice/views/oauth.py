@@ -5,7 +5,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import redirect
 from requests_oauthlib import OAuth2Session
 
-from buildservice.models import OAuthToken
+from buildservice.models import OAuthToken, Repository
 
 
 @login_required
@@ -42,4 +42,5 @@ def callback(request):
     except (KeyError, TypeError):
         return HttpResponseBadRequest('Cannot read access_token.')
 
+    Repository.add_user_to_known_repositories(request.user)
     return redirect("home")
