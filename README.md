@@ -5,7 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/m-vdb/github-buildservice-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/m-vdb/github-buildservice-boilerplate?branch=master)
 
 A boilerplate for creating a build service using Github.
-*Demo is available at https://buildservice.maxvdb.com/.*
+*Demo is available at https://buildservice.maxvdb.com/, with user **demo** and password **thisisfordemo**.*
 
 
 ## Features
