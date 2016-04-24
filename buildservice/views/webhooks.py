@@ -84,7 +84,7 @@ def push(request):
     except (KeyError, ValueError, TypeError):
         return HttpResponse()  # we don't care about errors
 
-    if event == 'push':
+    if event == 'push' and not payload.get('deleted'):
         branch = payload['ref'].replace('refs/heads/', '')
         sha = payload['after']
         repo_name = payload['repository']['full_name']
