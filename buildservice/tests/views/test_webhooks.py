@@ -190,6 +190,14 @@ class PushWebhooksTestCase(TestCase):
         self.assertFalse(create_status.called)
         self.assertFalse(run_build.called)
 
+    @patch('buildservice.tasks.run_build.delay')
+    @patch('buildservice.utils.github.create_status')
+    def test_post_deleted(self, create_status, run_build):
+        resp = self.do_proper_post(data={'deleted': True})
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(create_status.called)
+        self.assertFalse(run_build.called)
+
     def test_post_unknown_repo(self):
         resp = self.do_proper_post(data=self.payload)
         self.assertEqual(resp.status_code, 404)
