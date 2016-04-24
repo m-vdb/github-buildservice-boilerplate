@@ -4,6 +4,7 @@ from django.db import models
 
 from .oauth_token import OAuthToken
 from buildservice.errors import MissingToken
+from buildservice.utils import github
 
 
 class Repository(models.Model):
@@ -25,6 +26,18 @@ class Repository(models.Model):
         Return the name of the repository.
         """
         return self.name
+
+    @classmethod
+    def add_user_to_known_repositories(cls, user):
+        """
+        Add a new user to known repositories. If one
+        of his collaborators already added repositories,
+        that way he can access them.
+        """
+        token = user.oauth_token.value
+        repository_names = [repo.full_name for repo in github.get_user_repos(token)]
+        repositories = list(cls.objects.filter(name__in=repository_names))
+        user.repositories.add(*repositories)
 
     def get_token(self):
         """
